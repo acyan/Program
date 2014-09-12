@@ -18,7 +18,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-
+import org.controlsfx.dialog.Dialogs;
 /**
  * FXML Controller class
  *
@@ -52,9 +52,9 @@ public class SiteOverviewController{
         addressColumn.setCellValueFactory(cellData->cellData.getValue().nameProperty());
         statusColumn.setCellValueFactory(cellData->cellData.getValue().statusProperty());
         
-        showPersonDetails(null);
+        showSiteDetails(null);
         
-        siteTable.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Site> observable, Site oldValue, Site newValue) -> showPersonDetails(newValue));
+        siteTable.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Site> observable, Site oldValue, Site newValue) -> showSiteDetails(newValue));
         
     }    
     
@@ -63,7 +63,7 @@ public class SiteOverviewController{
         
         siteTable.setItems(mainApp.getSites());
     }
-    private void showPersonDetails(Site site) {
+    private void showSiteDetails(Site site) {
     	if (site != null) {
             addressLabel.setText(site.getName());
             statusLabel.setText(site.getStatus());
@@ -80,5 +80,24 @@ public class SiteOverviewController{
             statusLabel.setText("");
             pagesList.setItems(null);
     	}
+    }
+    
+    @FXML
+    private void handleEditPerson() {
+            Site selectedItem = siteTable.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                    boolean okClicked = mainApp.showSiteEditDialog(selectedItem);
+                    if (okClicked) {
+                            showSiteDetails(selectedItem);
+                    }
+
+            } else {
+                    // Nothing selected.
+                    Dialogs.create()
+                            .title("No Selection")
+                            .masthead("No Person Selected")
+                            .message("Please select a person in the table.")
+                            .showWarning();
+            }
     }
 }
