@@ -10,6 +10,8 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -19,6 +21,7 @@ public class Site {
     private StringProperty name;
     private StringProperty status;
     private BooleanProperty change;
+    private ObservableList<String> pages = FXCollections.observableArrayList();;
     
     public final void setName(String value) {
         nameProperty().set(value);
@@ -63,6 +66,10 @@ public class Site {
             change = new SimpleBooleanProperty();
         }
         return change;
+    }
+
+    public ObservableList<String> pagesProperty(){
+        return pages;
     }
     
     public Site(String name, Boolean change) {

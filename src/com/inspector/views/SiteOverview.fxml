@@ -27,12 +27,15 @@
   <rowConstraints>
     <RowConstraints maxHeight="46.0" minHeight="10.0" prefHeight="25.0" vgrow="SOMETIMES" />
     <RowConstraints maxHeight="67.0" minHeight="10.0" prefHeight="25.0" vgrow="SOMETIMES" />
-<RowConstraints maxHeight="169.0" minHeight="10.0" prefHeight="169.0" vgrow="SOMETIMES" />
+<RowConstraints maxHeight="169.0" minHeight="10.0" prefHeight="26.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="169.0" minHeight="10.0" prefHeight="159.0" vgrow="SOMETIMES" />
   </rowConstraints>
 <children><Label text="Адрес сайта" /><Label fx:id="addressLabel" text="Label" GridPane.columnIndex="1" /><Label text="Проверка на изменения" GridPane.rowIndex="1" />
-                        <ListView fx:id="pagesList" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <Label text="Список страниц" GridPane.rowIndex="2" />
+                        <ListView fx:id="pagesList" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label text="Список страниц" GridPane.rowIndex="3" GridPane.valignment="TOP" />
                         <Label fx:id="changesLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="Статус" GridPane.rowIndex="2" />
+                        <Label fx:id="statusLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 </children>
 </GridPane>
 <HBox layoutX="215.0" layoutY="259.0" spacing="5.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0">

@@ -15,6 +15,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
@@ -35,6 +36,10 @@ public class SiteOverviewController{
     private Label addressLabel;
     @FXML
     private Label changesLabel;
+    @FXML
+    private Label statusLabel;
+    @FXML
+    private ListView<String> pagesList;
     
     private MainApp mainApp;
 
@@ -61,6 +66,8 @@ public class SiteOverviewController{
     private void showPersonDetails(Site site) {
     	if (site != null) {
             addressLabel.setText(site.getName());
+            statusLabel.setText(site.getStatus());
+            pagesList.setItems(site.pagesProperty());
             if(site.getChange())
                 changesLabel.setText("Да");
             else {
@@ -70,6 +77,8 @@ public class SiteOverviewController{
     	} else {
             addressLabel.setText("");
             changesLabel.setText("");
+            statusLabel.setText("");
+            pagesList.setItems(null);
     	}
     }
 }

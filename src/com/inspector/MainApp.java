@@ -40,8 +40,11 @@ public class MainApp extends Application{
     }
 
     public MainApp() {
+        Site newSite = new Site("http://yandex.ru", Boolean.FALSE);
+        newSite.pagesProperty().add("http://maps.yandex.ru");
+        newSite.pagesProperty().add("http://market.yandex.ru");
         siteData.add(new Site("http://google.com", Boolean.TRUE));
-        siteData.add(new Site("http://yandex.ru", Boolean.FALSE));
+        siteData.add(newSite);
     }
     
     public void initRootLayout() {
