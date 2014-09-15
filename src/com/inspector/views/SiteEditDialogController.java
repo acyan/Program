@@ -16,6 +16,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
+import org.controlsfx.dialog.Dialogs;
 
 /**
  * FXML Controller class
@@ -32,6 +33,8 @@ public class SiteEditDialogController {
     private RadioButton noRadioButton;
     @FXML
     private ListView<String> pagesList;
+    @FXML
+    private TextField pageName;
     
     private Stage dialogStage;
     private Site site;
@@ -49,6 +52,8 @@ public class SiteEditDialogController {
     } 
     
     public void setSite(Site site){
+        this.site=site;
+        
         addressField.setText(site.getName());
         if(site.getChange()){
             yesRadioButton.setSelected(true);
@@ -62,6 +67,28 @@ public class SiteEditDialogController {
         return okClicked;
     }
 
+    @FXML
+    private void handleAdd(){
+        site.pagesProperty().add(pageName.getText());
+        pageName.setText("");
+    }
+    
+    @FXML
+    private void handleDelete(){
+            int selectedIndex = pagesList.getSelectionModel().getSelectedIndex();
+            if (selectedIndex >= 0) {
+                    pagesList.getItems().remove(selectedIndex);
+
+                    
+            } else {
+                    // Nothing selected.
+                    Dialogs.create()
+                    .title("No Selection")
+                    .masthead("No Person Selected")
+                    .message("Please select a person in the table.")
+                    .showWarning();
+            }
+    }
     @FXML
     private void handleOk() {
         String j=addressField.getText();

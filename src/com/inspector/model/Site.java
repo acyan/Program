@@ -71,6 +71,12 @@ public class Site {
     public ObservableList<String> pagesProperty(){
         return pages;
     }
+
+    public Site() {
+        setName("");
+        setStatus(null);
+        setChange(false);
+    }
     
     public Site(String name, Boolean change) {
         setName(name);

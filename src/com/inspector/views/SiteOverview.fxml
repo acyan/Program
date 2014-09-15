@@ -39,8 +39,7 @@
 </children>
 </GridPane>
 <HBox layoutX="215.0" layoutY="259.0" spacing="5.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0">
-<children><Button fx:id="addButton" layoutX="112.1875" layoutY="259.0" mnemonicParsing="false" text="Добавить" /><Button fx:id="editButton" layoutX="167.0" layoutY="259.0" mnemonicParsing="false" text="Редактировать" onAction="#handleEditPerson" /><Button fx:id="deleteButton" layoutX="221.0" layoutY="259.0" mnemonicParsing="false" text="Удалить" />
-</children>
+<children><Button fx:id="addButton" layoutX="112.1875" layoutY="259.0" mnemonicParsing="false" text="Добавить" onAction="#handleNewPerson"/><Button fx:id="editButton" layoutX="167.0" layoutY="259.0" mnemonicParsing="false" text="Редактировать" onAction="#handleEditPerson" /><Button fx:id="deleteButton" layoutX="221.0" layoutY="259.0" mnemonicParsing="false" text="Удалить" onAction="#handleDeletePerson"/></children>
 </HBox>
 </children></AnchorPane>
   </items>

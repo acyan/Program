@@ -83,6 +83,33 @@ public class SiteOverviewController{
     }
     
     @FXML
+    private void handleDeletePerson() {
+            int selectedIndex = siteTable.getSelectionModel().getSelectedIndex();
+            if (selectedIndex >= 0) {
+                    siteTable.getItems().remove(selectedIndex);
+
+                    mainApp.getSites().forEach(h->System.out.println(h.getName()));
+            } else {
+                    // Nothing selected.
+                    Dialogs.create()
+                    .title("No Selection")
+                    .masthead("No Person Selected")
+                    .message("Please select a person in the table.")
+                    .showWarning();
+            }
+    }
+
+
+    @FXML
+    private void handleNewPerson() {
+            Site temp = new Site();
+            boolean okClicked = mainApp.showSiteEditDialog(temp);
+            if (okClicked) {
+                    mainApp.getSites().add(temp);
+            }
+    }  
+    
+    @FXML
     private void handleEditPerson() {
             Site selectedItem = siteTable.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
