@@ -8,6 +8,7 @@ package com.inspector;
 
 import com.inspector.model.Site;
 import com.inspector.model.SiteListWrapper;
+import com.inspector.views.RootViewController;
 import com.inspector.views.SiteEditDialogController;
 import com.inspector.views.SiteOverviewController;
 import java.io.File;
@@ -56,19 +57,33 @@ public class MainApp extends Application{
         siteData.add(newSite);
     }
     
-    public void initRootLayout() {
-        try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("views/RootView.fxml"));
-            rootLayout = (BorderPane) loader.load();
-            
-            Scene scene = new Scene(rootLayout);
-            primaryStage.setScene(scene);
-            primaryStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+public void initRootLayout() {
+    try {
+        // Load root layout from fxml file.
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(MainApp.class
+                .getResource("views/RootView.fxml"));
+        rootLayout = (BorderPane) loader.load();
+
+        // Show the scene containing the root layout.
+        Scene scene = new Scene(rootLayout);
+        primaryStage.setScene(scene);
+
+        // Give the controller access to the main app.
+        RootViewController controller = loader.getController();
+        controller.setMainApp(this);
+
+        primaryStage.show();
+    } catch (IOException e) {
+        e.printStackTrace();
     }
+
+    // Try to load last opened person file.
+    File file = getFilePath();
+    if (file != null) {
+        loadDataFromFile(file);
+    }
+}
 
     
     public void showSiteOverview() {
@@ -117,7 +132,7 @@ public class MainApp extends Application{
             }
     }
     
-    public void loadPersonDataFromFile(File file) {
+    public void loadDataFromFile(File file) {
         try {
             JAXBContext context = JAXBContext
                     .newInstance(SiteListWrapper.class);
@@ -140,7 +155,7 @@ public class MainApp extends Application{
         }
     }
 
-    public void savePersonDataToFile(File file) {
+    public void saveDataToFile(File file) {
         try {
             JAXBContext context = JAXBContext
                     .newInstance(SiteListWrapper.class);
