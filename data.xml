@@ -1,0 +1,7 @@
+<list>
+  <com.inspector.model.SiteWrapper>
+    <name>http://google.com</name>
+    <change>true</change>
+    <pages/>
+  </com.inspector.model.SiteWrapper>
+</list>

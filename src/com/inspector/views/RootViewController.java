@@ -53,7 +53,7 @@ public class RootViewController {
         File file = fileChooser.showOpenDialog(mainApp.getPrimaryStage());
 
         if (file != null) {
-            mainApp.loadDataFromFile(file);
+            mainApp.loadData();
         }
     }
 
@@ -65,7 +65,7 @@ public class RootViewController {
     private void handleSave() {
 //        File personFile = mainApp.getFilePath();
 //        if (personFile != null) {
-//            mainApp.saveDataToFile(personFile);
+//            mainApp.saveData(personFile);
 //        } else {
 //            handleSaveAs();
 //        }
@@ -92,7 +92,7 @@ public class RootViewController {
 			if (!file.getPath().endsWith(".xml")) {
 				file = new File(file.getPath() + ".xml");
 			}
-			mainApp.saveDataToFile(file);
+			mainApp.saveData();
 		}
 	}
 

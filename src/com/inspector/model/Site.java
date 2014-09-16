@@ -6,6 +6,8 @@
 
 package com.inspector.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -14,6 +16,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -21,12 +25,12 @@ import javax.xml.bind.annotation.XmlType;
  *
  * @author dasha
  */
-@XmlRootElement(name = "root")
+//@XmlRootElement(name = "root")
 public class Site {
     private StringProperty name;
     private StringProperty status;
     private BooleanProperty change;
-    private ObservableList<String> pages = FXCollections.observableArrayList();;
+    private ObservableList<String> pages = FXCollections.<String>observableArrayList();
     
     public final void setName(String value) {
         nameProperty().set(value);
@@ -72,8 +76,15 @@ public class Site {
         }
         return change;
     }
-
+    public final void setPages(ObservableList<String> pages) {
+        this.pages=pages;
+    }
     public ObservableList<String> pagesProperty(){
+        return pages;
+    }
+   //@XmlElementWrapper(name = "stateList")  
+   //@XmlElement(name = "state")  
+    public final ObservableList<String> getPages() {
         return pages;
     }
 

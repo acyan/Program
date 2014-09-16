@@ -6,24 +6,30 @@
 
 package com.inspector;
 
+import com.inspector.model.FileUtil;
 import com.inspector.model.MyWrapperForList;
 import com.inspector.model.Site;
 import com.inspector.model.SiteListWrapper;
+import com.inspector.model.SiteWrapper;
 import com.inspector.views.RootViewController;
 import com.inspector.views.SiteEditDialogController;
 import com.inspector.views.SiteOverviewController;
+import com.thoughtworks.xstream.XStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.prefs.Preferences;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -45,7 +51,9 @@ public class MainApp extends Application{
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Приложение");   
-        
+        this.primaryStage.setOnCloseRequest((WindowEvent event) -> {
+            saveData();
+        });
         initRootLayout();
         showSiteOverview();
     }
@@ -79,11 +87,12 @@ public void initRootLayout() {
         e.printStackTrace();
     }
 
-    // Try to load last opened person file.
-//    File file = getFilePath();
-//    if (file != null) {
-//        loadDataFromFile(file);
-//    }
+    loadData();
+        // Try to load last opened person file.
+    //    File file = getFilePath();
+    //    if (file != null) {
+    //        loadData(file);
+    //    }
 }
 
     
@@ -133,51 +142,50 @@ public void initRootLayout() {
             }
     }
     
-    public void loadDataFromFile(File file) {
-        try {
-            JAXBContext context = JAXBContext
-                    .newInstance(SiteListWrapper.class);
-            Unmarshaller um = context.createUnmarshaller();
+    public void loadData() {
+      XStream xstream = new XStream();
+      xstream.alias("person", Site.class);
 
-            // Reading XML from the file and unmarshalling.
-            SiteListWrapper wrapper = (SiteListWrapper) um.unmarshal(file);
+      try {
+        String xml = FileUtil.readFile(new File("data.xml"));
 
-            siteData.clear();
-            siteData.addAll(wrapper.getSites());
+        ArrayList<SiteWrapper> personList = (ArrayList<SiteWrapper>) xstream.fromXML(xml);
 
-            // Save the file path to the registry.
-            setFilePath(file);
+        siteData.clear();
+        personList.forEach(f->{
+            siteData.add(f.getSite());
+        });
 
-        } catch (Exception e) { // catches ANY exception
-            Dialogs.create()
-                    .title("Error")
-                    .masthead("Could not load data from file:\n" + file.getPath())
-                    .showException(e);
-        }
+        siteData.forEach(file1-> {
+            System.out.println(file1.getName()+" "+file1.getChange()+" ");
+            file1.getPages().forEach(fil->System.out.println(fil));
+        });
+
+      } catch (Exception e) { // catches ANY exception
+
+      }
     }
 
-    public void saveDataToFile(File file) {
-        try {
-            JAXBContext context = JAXBContext
-                    .newInstance(MyWrapperForList.class);
-            Marshaller m = context.createMarshaller();
-            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
-            // Wrapping our person data.
-            SiteListWrapper wrapper = new SiteListWrapper();
-            wrapper.setSites(siteData);
-            
-            MyWrapperForList<Site> ww = new MyWrapperForList<Site>();
-            // Marshalling and saving XML to the file.
-            m.marshal(ww, file);
 
-            // Save the file path to the registry.
-            setFilePath(file);
-        } catch (Exception e) { // catches ANY exception
-            Dialogs.create().title("Error")
-                    .masthead("Could not save data to file:\n" + file.getPath())
-                    .showException(e);
-        }
+    public void saveData() {
+      XStream xstream = new XStream();
+      xstream.alias("person", Site.class);
+
+      // Convert ObservableList to a normal ArrayList
+      ArrayList<SiteWrapper> personList = new ArrayList<>();
+      siteData.forEach(f->{
+          personList.add(new SiteWrapper(f));
+      });
+      
+      String xml = xstream.toXML(personList);
+      try {
+        FileUtil.saveFile(xml, new File("data.xml"));
+
+
+      } catch (Exception e) { // catches ANY exception
+
+      }    
     }
     
     public File getFilePath() {
