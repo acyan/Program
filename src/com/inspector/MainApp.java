@@ -6,6 +6,7 @@
 
 package com.inspector;
 
+import com.inspector.model.MyWrapperForList;
 import com.inspector.model.Site;
 import com.inspector.model.SiteListWrapper;
 import com.inspector.views.RootViewController;
@@ -79,10 +80,10 @@ public void initRootLayout() {
     }
 
     // Try to load last opened person file.
-    File file = getFilePath();
-    if (file != null) {
-        loadDataFromFile(file);
-    }
+//    File file = getFilePath();
+//    if (file != null) {
+//        loadDataFromFile(file);
+//    }
 }
 
     
@@ -158,16 +159,17 @@ public void initRootLayout() {
     public void saveDataToFile(File file) {
         try {
             JAXBContext context = JAXBContext
-                    .newInstance(SiteListWrapper.class);
+                    .newInstance(MyWrapperForList.class);
             Marshaller m = context.createMarshaller();
             m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
             // Wrapping our person data.
             SiteListWrapper wrapper = new SiteListWrapper();
             wrapper.setSites(siteData);
-
+            
+            MyWrapperForList<Site> ww = new MyWrapperForList<Site>();
             // Marshalling and saving XML to the file.
-            m.marshal(wrapper, file);
+            m.marshal(ww, file);
 
             // Save the file path to the registry.
             setFilePath(file);

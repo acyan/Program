@@ -63,12 +63,13 @@ public class RootViewController {
      */
     @FXML
     private void handleSave() {
-        File personFile = mainApp.getFilePath();
-        if (personFile != null) {
-            mainApp.saveDataToFile(personFile);
-        } else {
-            handleSaveAs();
-        }
+//        File personFile = mainApp.getFilePath();
+//        if (personFile != null) {
+//            mainApp.saveDataToFile(personFile);
+//        } else {
+//            handleSaveAs();
+//        }
+        handleSaveAs();
     }
 
     /**
