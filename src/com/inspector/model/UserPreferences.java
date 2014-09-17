@@ -17,8 +17,7 @@ public class UserPreferences
     public UserPreferences()
     {
         userPrefs = Preferences.userRoot().node(this.getClass().getName());
-        userPrefs.put(STATUS, "10000");
-        statusFrequencyProperty().set("10000");
+        statusFrequencyProperty().set(userPrefs.get(STATUS, "10000"));
     }
 
     public Preferences getUserPrefs() {

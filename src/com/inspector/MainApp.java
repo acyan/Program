@@ -75,7 +75,19 @@ public class MainApp extends Application{
         loadData();
         pref=new UserPreferences();
         pref.statusFrequencyProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            service.setPeriod(new Duration(Integer.parseInt(newValue)));
+            if(Integer.parseInt(newValue)>0){
+                
+                service.setPeriod(new Duration(Integer.parseInt(newValue)));  
+                if(!service.isRunning()){
+                    service.restart();
+                    
+                     System.out.println("сервис перезапущен");
+                }
+            } else{
+                service.cancel();
+                System.out.println("сервис завершен");
+            }
+
         });
         
         this.service = new MyService2(getUrl(siteData));

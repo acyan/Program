@@ -10,6 +10,7 @@ import com.inspector.MainApp;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
@@ -25,7 +26,11 @@ public class SettingsViewController {
     private Stage dialogStage;
     private boolean okClicked = false;
     @FXML
-    private ChoiceBox statusChoiceBox;
+    private ChoiceBox statusSecChoiceBox;
+    @FXML
+    private ChoiceBox statusMinChoiceBox;
+    @FXML
+    private ChoiceBox statusHourChoiceBox;
     @FXML
     private ChoiceBox changesChoiceBox;   
     @FXML
@@ -41,6 +46,19 @@ public class SettingsViewController {
     
     @FXML
     public void initialize() {
+        ObservableList<Integer> seconds = FXCollections.observableArrayList();
+        ObservableList<Integer> minutes = FXCollections.observableArrayList();
+        ObservableList<Integer> hours = FXCollections.observableArrayList();
+        for(int i = 0;i<61;i++){
+            seconds.add(i);
+            minutes.add(i);
+        }
+        for(int i=0;i<25;i++){
+            hours.add(i);
+        }
+        statusSecChoiceBox.setItems(seconds);
+        statusMinChoiceBox.setItems(minutes);
+        statusHourChoiceBox.setItems(hours);
 
 //        statusChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
 //
@@ -56,10 +74,8 @@ public class SettingsViewController {
     }
     @FXML
     private void handleOk() {
-        int l = Integer.parseInt(statusSecField.getText());
-        int k = Integer.parseInt(statusMinField.getText());
-        int j = Integer.parseInt(statusHourField.getText());
-        int microSeconds = Integer.parseInt(statusSecField.getText())*1000+Integer.parseInt(statusMinField.getText())*60000+Integer.parseInt(statusHourField.getText())*1000*60*60;
+        int microSeconds = (int)statusSecChoiceBox.getValue()*1000+(int)statusMinChoiceBox.getValue()*60*1000+(int)statusHourChoiceBox.getValue()*60*60*1000;
+    //    int microSeconds = Integer.parseInt(statusSecField.getText())*1000+Integer.parseInt(statusMinField.getText())*60000+Integer.parseInt(statusHourField.getText())*1000*60*60;
         mainApp.getPreferences().setStatusFrequency(String.valueOf(microSeconds));
         okClicked = true;
         dialogStage.close();
@@ -76,9 +92,13 @@ public class SettingsViewController {
         int hours = Integer.parseInt(mainApp.getPreferences().getStatusFrequency())/1000/60/60;
         int minutes = (Integer.parseInt(mainApp.getPreferences().getStatusFrequency())-hours*60*60*1000)/60/1000;
         int seconds = (Integer.parseInt(mainApp.getPreferences().getStatusFrequency())-hours*60*60*1000-minutes*60*1000)/1000;
-        statusSecField.setText(String.valueOf(seconds));
-        statusMinField.setText(String.valueOf(minutes));
-        statusHourField.setText(String.valueOf(hours));
+        statusSecChoiceBox.setValue(seconds);
+        statusMinChoiceBox.setValue(minutes);
+        statusHourChoiceBox.setValue(hours);
+        
+//        statusSecField.setText(String.valueOf(seconds));
+//        statusMinField.setText(String.valueOf(minutes));
+//        statusHourField.setText(String.valueOf(hours));
     }
     
     public void setSettings(){
