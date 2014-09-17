@@ -29,6 +29,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Worker;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -79,7 +80,10 @@ public class MainApp extends Application{
                 
                 service.setPeriod(new Duration(Integer.parseInt(newValue)));  
                 if(!service.isRunning()){
-                    service.restart();
+                    if(service.getState()==Worker.State.CANCELLED)
+                        service.restart();
+                    else
+                        service.start();
                     
                      System.out.println("сервис перезапущен");
                 }
@@ -106,7 +110,8 @@ public class MainApp extends Application{
              //   time.setI(0);
             }
         });
-        service.start();
+        if(!service.getPeriod().lessThan(Duration.ONE))
+            service.start();
     }
     
 public void initRootLayout() {
