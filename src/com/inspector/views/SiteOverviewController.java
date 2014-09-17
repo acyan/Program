@@ -87,7 +87,7 @@ public class SiteOverviewController{
             int selectedIndex = siteTable.getSelectionModel().getSelectedIndex();
             if (selectedIndex >= 0) {
                     siteTable.getItems().remove(selectedIndex);
-
+                    mainApp.getService().setSites(mainApp.getUrl(mainApp.getSites()));
                     mainApp.getSites().forEach(h->System.out.println(h.getName()));
             } else {
                     // Nothing selected.
@@ -106,6 +106,8 @@ public class SiteOverviewController{
             boolean okClicked = mainApp.showSiteEditDialog(temp);
             if (okClicked) {
                     mainApp.getSites().add(temp);
+                    mainApp.getSites().forEach(f->System.out.println(f.getName()));
+                    mainApp.getService().getSites().add(temp.getName());
             }
     }  
     

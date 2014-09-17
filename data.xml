@@ -1,7 +1,31 @@
 <list>
   <com.inspector.model.SiteWrapper>
     <name>http://google.com</name>
+    <status>доступен</status>
+    <change>false</change>
+    <pages>
+      <string>mail.google.com</string>
+    </pages>
+  </com.inspector.model.SiteWrapper>
+  <com.inspector.model.SiteWrapper>
+    <name>http://yandex.ru</name>
+    <status>доступен</status>
     <change>true</change>
+    <pages>
+      <string>map,yandex.ru</string>
+      <string>market.yandex.ru</string>
+    </pages>
+  </com.inspector.model.SiteWrapper>
+  <com.inspector.model.SiteWrapper>
+    <name>http://wikipedia.org</name>
+    <status>доступен</status>
+    <change>false</change>
+    <pages/>
+  </com.inspector.model.SiteWrapper>
+  <com.inspector.model.SiteWrapper>
+    <name>https://mail.ru/</name>
+    <status>доступен</status>
+    <change>false</change>
     <pages/>
   </com.inspector.model.SiteWrapper>
 </list>

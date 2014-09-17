@@ -7,6 +7,7 @@
 package com.inspector;
 
 import com.inspector.model.FileUtil;
+import com.inspector.model.MyService2;
 import com.inspector.model.MyWrapperForList;
 import com.inspector.model.Site;
 import com.inspector.model.SiteListWrapper;
@@ -18,10 +19,13 @@ import com.thoughtworks.xstream.XStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.BlockingQueue;
 import java.util.prefs.Preferences;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -30,6 +34,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javafx.util.Duration;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -46,6 +51,7 @@ public class MainApp extends Application{
 
     
     private ObservableList<Site> siteData = FXCollections.observableArrayList();
+    private MyService2 service;
     
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -64,6 +70,25 @@ public class MainApp extends Application{
         newSite.pagesProperty().add("http://market.yandex.ru");
         siteData.add(new Site("http://google.com", Boolean.TRUE));
         siteData.add(newSite);
+        loadData();
+        
+        this.service = new MyService2(getUrl(siteData));
+        service.setDelay(new Duration(300));
+        service.setPeriod(new Duration(20000));      
+        
+        service.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+
+            @Override
+            public void handle(WorkerStateEvent event) {
+                BlockingQueue<String> results = (BlockingQueue<String>) event.getSource().getValue();
+                for(Site site:siteData){
+                    site.setStatus(results.poll());
+                    
+                }
+             //   time.setI(0);
+            }
+        });
+        service.start();
     }
     
 public void initRootLayout() {
@@ -87,7 +112,7 @@ public void initRootLayout() {
         e.printStackTrace();
     }
 
-    loadData();
+    //loadData();
         // Try to load last opened person file.
     //    File file = getFilePath();
     //    if (file != null) {
@@ -218,6 +243,19 @@ public void initRootLayout() {
     public ObservableList<Site> getSites(){
         return siteData;
     }
+    
+    public MyService2 getService(){
+        return service;
+    }
+    
+    public List<String> getUrl(ObservableList<Site> sites){
+        List<String> result = new ArrayList<String>();
+        for(Site site:sites){
+            result.add(site.getName());
+        }
+        return result;
+    }
+    
     public static void main(String[] args) {
         launch(args);
     }
