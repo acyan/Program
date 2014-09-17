@@ -8,12 +8,8 @@ package com.inspector.views;
 
 import com.inspector.MainApp;
 import com.inspector.model.Site;
-import java.net.URL;
-import java.util.ResourceBundle;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;

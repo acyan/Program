@@ -12,29 +12,15 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
-import javafx.collections.ObservableList;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.conn.HttpHostConnectException;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
-import org.apache.http.util.EntityUtils;
 /**
  *
  * @author dasha
@@ -104,39 +90,39 @@ public class MyService2 extends ScheduledService<BlockingQueue>{
 
   
 
-public static class MyCallable implements Callable {
-        private final CloseableHttpClient httpClient;
-        private final HttpContext context;
-        private final HttpGet httpget;
-
-        public MyCallable(CloseableHttpClient httpClient, HttpGet httpget) {
-            this.httpClient = httpClient;
-            this.context = new BasicHttpContext();
-            this.httpget = httpget;
-        }
-
-        @Override
-        public String call() throws Exception {
-            String result="";
-            try {             
-                CloseableHttpResponse response = httpClient.execute(httpget, context);
-                try {
-
-                    result = Status.ACTIVE.getValue();
-
-                } finally {
-                    response.close();
-                }
-            } catch(HttpHostConnectException e){
-                result = Status.INACTIVE.getValue();
-            }
-            catch (Exception e) {
-                System.out.println(" - error: " + e);
-            }
-            return result;
-        }
-    
-}
+//public static class MyCallable implements Callable {
+//        private final CloseableHttpClient httpClient;
+//        private final HttpContext context;
+//        private final HttpGet httpget;
+//
+//        public MyCallable(CloseableHttpClient httpClient, HttpGet httpget) {
+//            this.httpClient = httpClient;
+//            this.context = new BasicHttpContext();
+//            this.httpget = httpget;
+//        }
+//
+//        @Override
+//        public String call() throws Exception {
+//            String result="";
+//            try {             
+//                CloseableHttpResponse response = httpClient.execute(httpget, context);
+//                try {
+//
+//                    result = Status.ACTIVE.getValue();
+//
+//                } finally {
+//                    response.close();
+//                }
+//            } catch(HttpHostConnectException e){
+//                result = Status.INACTIVE.getValue();
+//            }
+//            catch (Exception e) {
+//                System.out.println(" - error: " + e);
+//            }
+//            return result;
+//        }
+//    
+//}
 
 
     public static class MyCallable2 implements Callable{

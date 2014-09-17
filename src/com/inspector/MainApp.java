@@ -13,6 +13,7 @@ import com.inspector.model.Site;
 import com.inspector.model.SiteListWrapper;
 import com.inspector.model.SiteWrapper;
 import com.inspector.views.RootViewController;
+import com.inspector.views.SettingsViewController;
 import com.inspector.views.SiteEditDialogController;
 import com.inspector.views.SiteOverviewController;
 import com.thoughtworks.xstream.XStream;
@@ -166,7 +167,31 @@ public void initRootLayout() {
                     return false;
             }
     }
-    
+    public boolean showSettingsView(){
+        try{
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(MainApp.class.getResource("views/SettingsView.fxml"));
+                AnchorPane page = (AnchorPane) loader.load();    
+
+                Stage dialogStage = new Stage();
+                dialogStage.setTitle("Настройки");
+                dialogStage.initModality(Modality.WINDOW_MODAL);
+                dialogStage.initOwner(primaryStage);
+                Scene scene = new Scene(page);
+                dialogStage.setScene(scene);
+                
+                SettingsViewController controller = loader.getController();
+                controller.setDialogStage(dialogStage);
+                
+                dialogStage.showAndWait();
+                return controller.isOkClicked();
+                
+            } catch (IOException e) {
+                    e.printStackTrace();
+                    return false;
+            }
+  
+    }
     public void loadData() {
       XStream xstream = new XStream();
       xstream.alias("person", Site.class);

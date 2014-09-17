@@ -28,4 +28,10 @@
     <change>false</change>
     <pages/>
   </com.inspector.model.SiteWrapper>
+  <com.inspector.model.SiteWrapper>
+    <name>http://stankin.ru</name>
+    <status>доступен</status>
+    <change>false</change>
+    <pages/>
+  </com.inspector.model.SiteWrapper>
 </list>

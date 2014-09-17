@@ -115,4 +115,9 @@ public class RootViewController {
     private void handleExit() {
         System.exit(0);
     }
+    
+    @FXML
+    private void handleSettings(){
+        mainApp.showSettingsView();
+    }
 }

@@ -10,15 +10,10 @@
     <Menu mnemonicParsing="false" text="Файл">
       <items>
         <MenuItem mnemonicParsing="false" text="Close" />
-                  <MenuItem mnemonicParsing="false" onAction="#handleSave" text="Save" />
-                  <MenuItem mnemonicParsing="false" onAction="#handleOpen" text="Load" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleSettings" text="Настройки" />
       </items>
     </Menu>
-    <Menu mnemonicParsing="false" text="Редактировать">
-      <items>
-        <MenuItem mnemonicParsing="false" text="Delete" />
-      </items>
-    </Menu>
+    <Menu mnemonicParsing="false" text="Настройки" />
     <Menu mnemonicParsing="false" text="Помощь">
       <items>
         <MenuItem mnemonicParsing="false" text="About" />
