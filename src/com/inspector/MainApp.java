@@ -8,15 +8,15 @@ package com.inspector;
 
 import com.inspector.model.FileUtil;
 import com.inspector.model.MyService2;
-import com.inspector.model.MyWrapperForList;
 import com.inspector.model.Site;
-import com.inspector.model.SiteListWrapper;
 import com.inspector.model.SiteWrapper;
+import com.inspector.model.UserPreferences;
 import com.inspector.views.RootViewController;
 import com.inspector.views.SettingsViewController;
 import com.inspector.views.SiteEditDialogController;
 import com.inspector.views.SiteOverviewController;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.extended.DurationConverter;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,6 +24,9 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.prefs.Preferences;
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.WorkerStateEvent;
@@ -36,10 +39,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import org.controlsfx.dialog.Dialogs;
+import javafx.util.converter.*;
 
 /**
  *
@@ -53,6 +53,7 @@ public class MainApp extends Application{
     
     private ObservableList<Site> siteData = FXCollections.observableArrayList();
     private MyService2 service;
+    private UserPreferences pref;
     
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -72,11 +73,15 @@ public class MainApp extends Application{
         siteData.add(new Site("http://google.com", Boolean.TRUE));
         siteData.add(newSite);
         loadData();
+        pref=new UserPreferences();
+        pref.statusFrequencyProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            service.setPeriod(new Duration(Integer.parseInt(newValue)));
+        });
         
         this.service = new MyService2(getUrl(siteData));
         service.setDelay(new Duration(300));
-        service.setPeriod(new Duration(20000));      
-        
+        service.setPeriod(new Duration(Integer.parseInt(pref.getStatusFrequency())));  
+     //   service.setPeriod(new Duration(10000)); 
         service.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 
             @Override
@@ -84,7 +89,7 @@ public class MainApp extends Application{
                 BlockingQueue<String> results = (BlockingQueue<String>) event.getSource().getValue();
                 for(Site site:siteData){
                     site.setStatus(results.poll());
-                    
+//                    pref.getUserPrefs().putInt("item", pref.getUserPrefs().getInt("item", 0)+1);
                 }
              //   time.setI(0);
             }
@@ -182,6 +187,7 @@ public void initRootLayout() {
                 
                 SettingsViewController controller = loader.getController();
                 controller.setDialogStage(dialogStage);
+                controller.setMainApp(this);
                 
                 dialogStage.showAndWait();
                 return controller.isOkClicked();
@@ -272,7 +278,9 @@ public void initRootLayout() {
     public MyService2 getService(){
         return service;
     }
-    
+    public UserPreferences getPreferences(){
+        return pref;
+    }
     public List<String> getUrl(ObservableList<Site> sites){
         List<String> result = new ArrayList<String>();
         for(Site site:sites){

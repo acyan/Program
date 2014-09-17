@@ -69,6 +69,7 @@ public class MyService2 extends ScheduledService<BlockingQueue>{
 
                    }
                    executor.shutdown();
+                   
                    // Wait until all threads are finish
 //                   while (!executor.isTerminated()) {
 //
@@ -76,7 +77,7 @@ public class MyService2 extends ScheduledService<BlockingQueue>{
                    for(Future<String> element:results){
                        result.add(element.get());
                    }
-                   System.out.println("\nFinished all threads");    
+                   System.out.println("\nFinished all threads "+getPeriod());    
                    
                 } finally{
                //     httpclient.close();
@@ -140,7 +141,7 @@ public class MyService2 extends ScheduledService<BlockingQueue>{
                 Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("172.16.0.3", 3128));
                 URL siteURL = new URL(url);
                 HttpURLConnection connection = (HttpURLConnection) siteURL
-                        .openConnection(proxy);
+                        .openConnection();
                 connection.setRequestMethod("GET");
                 connection.connect();
  

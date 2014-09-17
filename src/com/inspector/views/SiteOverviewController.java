@@ -36,6 +36,8 @@ public class SiteOverviewController{
     private Label statusLabel;
     @FXML
     private ListView<String> pagesList;
+    @FXML
+    private Label labelTest;
     
     private MainApp mainApp;
 
@@ -45,6 +47,7 @@ public class SiteOverviewController{
     
     @FXML
     public void initialize() {
+        
         addressColumn.setCellValueFactory(cellData->cellData.getValue().nameProperty());
         statusColumn.setCellValueFactory(cellData->cellData.getValue().statusProperty());
         
