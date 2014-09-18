@@ -6,10 +6,13 @@
 
 package com.inspector.views;
 
+import com.inspector.model.Page;
 import com.inspector.model.Site;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.controlsfx.dialog.Dialogs;
@@ -28,7 +31,11 @@ public class SiteEditDialogController {
     @FXML
     private RadioButton noRadioButton;
     @FXML
-    private ListView<String> pagesList;
+    private TableView<Page> pagesList;
+    @FXML
+    private TableColumn<Page, String> pageAddressColumn;
+    @FXML
+    private TableColumn<Page, String> pageStatusColumn;
     @FXML
     private TextField pageName;
     
@@ -65,7 +72,7 @@ public class SiteEditDialogController {
 
     @FXML
     private void handleAdd(){
-        site.pagesProperty().add(pageName.getText());
+        site.pagesProperty().add(new Page(pageName.getText()));
         pageName.setText("");
     }
     

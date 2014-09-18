@@ -2,36 +2,26 @@
   <com.inspector.model.SiteWrapper>
     <name>http://google.com</name>
     <status>доступен</status>
-    <change>false</change>
-    <pages>
-      <string>mail.google.com</string>
-    </pages>
+    <change>true</change>
+    <pages/>
   </com.inspector.model.SiteWrapper>
   <com.inspector.model.SiteWrapper>
     <name>http://yandex.ru</name>
     <status>доступен</status>
-    <change>true</change>
+    <change>false</change>
     <pages>
-      <string>map,yandex.ru</string>
-      <string>market.yandex.ru</string>
+      <com.inspector.model.PageWrapper>
+        <name>http://maps.yandex.ru</name>
+      </com.inspector.model.PageWrapper>
+      <com.inspector.model.PageWrapper>
+        <name>http://market.yandex.ru</name>
+      </com.inspector.model.PageWrapper>
     </pages>
-  </com.inspector.model.SiteWrapper>
-  <com.inspector.model.SiteWrapper>
-    <name>http://wikipedia.org</name>
-    <status>доступен</status>
-    <change>false</change>
-    <pages/>
-  </com.inspector.model.SiteWrapper>
-  <com.inspector.model.SiteWrapper>
-    <name>https://mail.ru/</name>
-    <status>доступен</status>
-    <change>false</change>
-    <pages/>
   </com.inspector.model.SiteWrapper>
   <com.inspector.model.SiteWrapper>
     <name>http://stankin.ru</name>
     <status>доступен</status>
-    <change>false</change>
+    <change>true</change>
     <pages/>
   </com.inspector.model.SiteWrapper>
 </list>

@@ -7,6 +7,7 @@
 package com.inspector.views;
 
 import com.inspector.MainApp;
+import com.inspector.model.Page;
 import com.inspector.model.Site;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -35,7 +36,11 @@ public class SiteOverviewController{
     @FXML
     private Label statusLabel;
     @FXML
-    private ListView<String> pagesList;
+    private TableView<Page> pagesList;
+    @FXML
+    private TableColumn<Page, String> pageAddressColumn;
+    @FXML
+    private TableColumn<Page, String> pageStatusColumn;
     @FXML
     private Label labelTest;
     
@@ -50,6 +55,9 @@ public class SiteOverviewController{
         
         addressColumn.setCellValueFactory(cellData->cellData.getValue().nameProperty());
         statusColumn.setCellValueFactory(cellData->cellData.getValue().statusProperty());
+        
+        pageAddressColumn.setCellValueFactory(data->data.getValue().nameProperty());
+        pageStatusColumn.setCellValueFactory(cellData->cellData.getValue().statusProperty());
         
         showSiteDetails(null);
         

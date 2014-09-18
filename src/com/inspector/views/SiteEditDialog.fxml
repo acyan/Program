@@ -46,7 +46,12 @@
                         <Insets left="20.0" />
                      </padding>
                   </HBox>
-                  <ListView fx:id="pagesList" prefHeight="215.0" prefWidth="297.0" />
+                  <TableView fx:id="pagesList" prefHeight="215.0" prefWidth="297.0" >
+                        <columns>
+                           <TableColumn fx:id="pageAddressColumn" prefWidth="125.0" text="Адрес" />
+                           <TableColumn fx:id="pageStatusColumn" prefWidth="83.0" text="Статус" />
+                         </columns>
+                  </TableView>
 
                </children>
             </VBox>

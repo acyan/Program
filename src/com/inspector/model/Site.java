@@ -22,7 +22,7 @@ public class Site {
     private StringProperty name;
     private StringProperty status;
     private BooleanProperty change;
-    private ObservableList<String> pages = FXCollections.<String>observableArrayList();
+    private ObservableList<Page> pages = FXCollections.<Page>observableArrayList();
     
     public final void setName(String value) {
         nameProperty().set(value);
@@ -68,15 +68,15 @@ public class Site {
         }
         return change;
     }
-    public final void setPages(ObservableList<String> pages) {
+    public final void setPages(ObservableList<Page> pages) {
         this.pages=pages;
     }
-    public ObservableList<String> pagesProperty(){
+    public ObservableList<Page> pagesProperty(){
         return pages;
     }
    //@XmlElementWrapper(name = "stateList")  
    //@XmlElement(name = "state")  
-    public final ObservableList<String> getPages() {
+    public final ObservableList<Page> getPages() {
         return pages;
     }
 

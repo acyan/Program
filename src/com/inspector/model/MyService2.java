@@ -141,7 +141,7 @@ public class MyService2 extends ScheduledService<BlockingQueue>{
                 Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("172.16.0.3", 3128));
                 URL siteURL = new URL(url);
                 HttpURLConnection connection = (HttpURLConnection) siteURL
-                        .openConnection();
+                        .openConnection(proxy);
                 connection.setRequestMethod("GET");
                 connection.connect();
  

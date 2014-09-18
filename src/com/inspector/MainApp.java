@@ -8,6 +8,7 @@ package com.inspector;
 
 import com.inspector.model.FileUtil;
 import com.inspector.model.MyService2;
+import com.inspector.model.Page;
 import com.inspector.model.Site;
 import com.inspector.model.SiteWrapper;
 import com.inspector.model.UserPreferences;
@@ -69,11 +70,13 @@ public class MainApp extends Application{
 
     public MainApp() {
         Site newSite = new Site("http://yandex.ru", Boolean.FALSE);
-        newSite.pagesProperty().add("http://maps.yandex.ru");
-        newSite.pagesProperty().add("http://market.yandex.ru");
+        newSite.pagesProperty().add(new Page("http://maps.yandex.ru"));
+        newSite.pagesProperty().add(new Page("http://market.yandex.ru"));
         siteData.add(new Site("http://google.com", Boolean.TRUE));
         siteData.add(newSite);
         loadData();
+        siteData.forEach(site->addFolders(site));
+        
         pref=new UserPreferences();
         pref.statusFrequencyProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             if(Integer.parseInt(newValue)>0){
@@ -112,6 +115,7 @@ public class MainApp extends Application{
         });
         if(!service.getPeriod().lessThan(Duration.ONE))
             service.start();
+        
     }
     
 public void initRootLayout() {
@@ -284,6 +288,21 @@ public void initRootLayout() {
             // Update the stage title.
          //   primaryStage.setTitle("AddressApp");
         }
+    }
+    
+    public void addFolders(Site site){
+        String name = site.getName().replace("http://", "").replaceAll("/", " ");
+        try{
+            (new File("sites/"+name)).mkdirs();           
+            site.getPages().forEach(s->{
+                String pageName = s.getName().replace("http://", "").replaceAll("/", " ");
+                (new File("sites/"+name+"/"+pageName)).mkdirs();
+                    });
+            
+        } catch(Exception e){
+            
+        }
+        
     }
     public Stage getPrimaryStage() {
             return primaryStage;
