@@ -7,7 +7,7 @@
 package com.inspector;
 
 import com.inspector.model.FileUtil;
-import com.inspector.model.MyService2;
+import com.inspector.model.StatusService;
 import com.inspector.model.Page;
 import com.inspector.model.Site;
 import com.inspector.model.SiteWrapper;
@@ -20,6 +20,9 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.extended.DurationConverter;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -54,7 +57,7 @@ public class MainApp extends Application{
 
     
     private ObservableList<Site> siteData = FXCollections.observableArrayList();
-    private MyService2 service;
+    private StatusService service;
     private UserPreferences pref;
     
     @Override
@@ -97,9 +100,10 @@ public class MainApp extends Application{
 
         });
         
-        this.service = new MyService2(getUrl(siteData));
+        this.service = new StatusService(getUrl(siteData));
         service.setDelay(new Duration(300));
         service.setPeriod(new Duration(Integer.parseInt(pref.getStatusFrequency())));  
+
      //   service.setPeriod(new Duration(10000)); 
         service.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 
@@ -301,9 +305,34 @@ public void initRootLayout() {
             
         } catch(Exception e){
             
-        }
-        
+        }     
     }
+    
+    public static String md5Custom(String st) {
+        MessageDigest messageDigest = null;
+        byte[] digest = new byte[0];
+
+        try {
+            messageDigest = MessageDigest.getInstance("MD5");
+            messageDigest.reset();
+            messageDigest.update(st.getBytes());
+            digest = messageDigest.digest();
+        } catch (NoSuchAlgorithmException e) {
+            // тут можно обработать ошибку
+            // возникает она если в передаваемый алгоритм в getInstance(,,,) не существует
+            e.printStackTrace();
+        }
+
+        BigInteger bigInt = new BigInteger(1, digest);
+        String md5Hex = bigInt.toString(16);
+
+        while( md5Hex.length() < 32 ){
+            md5Hex = "0" + md5Hex;
+        }
+
+        return md5Hex;
+    }
+    
     public Stage getPrimaryStage() {
             return primaryStage;
     }
@@ -311,7 +340,7 @@ public void initRootLayout() {
         return siteData;
     }
     
-    public MyService2 getService(){
+    public StatusService getService(){
         return service;
     }
     public UserPreferences getPreferences(){

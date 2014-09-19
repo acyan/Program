@@ -8,8 +8,7 @@ public class UserPreferences
 {
     private Preferences userPrefs;
     private StringProperty statusFrequency;
-    
-  //  private int changeFrequency;
+    private int changeFrequency;
     
     private final static String STATUS = "status";
     private final static String CHANGE = "change";
@@ -18,6 +17,7 @@ public class UserPreferences
     {
         userPrefs = Preferences.userRoot().node(this.getClass().getName());
         statusFrequencyProperty().set(userPrefs.get(STATUS, "10000"));
+        
     }
 
     public Preferences getUserPrefs() {

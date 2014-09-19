@@ -25,7 +25,7 @@ import javafx.concurrent.Task;
  *
  * @author dasha
  */
-public class MyService2 extends ScheduledService<BlockingQueue>{
+public class StatusService extends ScheduledService<BlockingQueue>{
 
     private List<String> sites;
 
@@ -37,7 +37,7 @@ public class MyService2 extends ScheduledService<BlockingQueue>{
         this.sites = sites;
     }
     
-    public MyService2(List<String> sites) {
+    public StatusService(List<String> sites) {
         this.sites = sites;
     }
 
