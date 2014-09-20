@@ -1,11 +1,13 @@
 <list>
   <com.inspector.model.SiteWrapper>
     <name>http://google.com</name>
+    <status>доступен</status>
     <change>true</change>
     <pages/>
   </com.inspector.model.SiteWrapper>
   <com.inspector.model.SiteWrapper>
     <name>http://yandex.ru</name>
+    <status>доступен</status>
     <change>false</change>
     <pages>
       <com.inspector.model.PageWrapper>
@@ -17,8 +19,9 @@
     </pages>
   </com.inspector.model.SiteWrapper>
   <com.inspector.model.SiteWrapper>
-    <name>http://stankin.ru</name>
-    <change>true</change>
+    <name>http://mail.ru</name>
+    <status>доступен</status>
+    <change>false</change>
     <pages/>
   </com.inspector.model.SiteWrapper>
 </list>

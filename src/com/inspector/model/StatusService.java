@@ -13,8 +13,10 @@ import java.net.Proxy;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -27,23 +29,24 @@ import javafx.concurrent.Task;
  */
 public class StatusService extends ScheduledService<BlockingQueue>{
 
-    private List<String> sites;
+    private CopyOnWriteArrayList<String> sites;
 
     public List<String> getSites() {
         return sites;
     }
 
     public void setSites(List<String> sites) {
-        this.sites = sites;
+        this.sites = new CopyOnWriteArrayList(sites);
     }
     
     public StatusService(List<String> sites) {
-        this.sites = sites;
+        this.sites = new CopyOnWriteArrayList(sites);
     }
 
     @Override
     protected Task<BlockingQueue> createTask() {
         final Task<BlockingQueue> task;
+        System.out.println("lol");
         task = new Task<BlockingQueue>(){
         
             @Override
@@ -140,21 +143,39 @@ public class StatusService extends ScheduledService<BlockingQueue>{
             try {
                 Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("172.16.0.3", 3128));
                 URL siteURL = new URL(url);
-                HttpURLConnection connection = (HttpURLConnection) siteURL
-                        .openConnection(proxy);
-                connection.setRequestMethod("GET");
-                connection.connect();
- 
-                code = connection.getResponseCode();
+                code = getCode(new URL(url));
                 if (code == 200) {
                     result = Status.ACTIVE.getValue();
+                } else
+                {
+                    result = Status.INACTIVE.getValue();
                 }
             } catch (Exception e) {
                 result = Status.INACTIVE.getValue();
             }
             return result;
         }
-        
+        private int getCode(URL site){
+            HttpURLConnection connection = null;
+            int code=0;
+            try{
+                 connection = (HttpURLConnection) site
+                        .openConnection();
+                connection.setRequestMethod("HEAD");
+
+                connection.setReadTimeout(10000);
+                connection.connect();
+                code = connection.getResponseCode();
+                
+                if(code==302){
+                    String url = connection.getHeaderField("Location");
+                    code = getCode(new URL(url));
+                }                
+            } catch (Exception e){
+                
+            }
+            return code;
+        }
     }
 //    static class GetThread extends Thread {
 //
