@@ -9,12 +9,18 @@ package com.inspector.views;
 import com.inspector.MainApp;
 import com.inspector.model.Page;
 import com.inspector.model.Site;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.util.Duration;
 import org.controlsfx.dialog.Dialogs;
 /**
  * FXML Controller class
@@ -46,6 +52,8 @@ public class SiteOverviewController{
     
     private MainApp mainApp;
 
+    private SimpleStringProperty value;
+    
     public SiteOverviewController() {
     }
  
@@ -68,7 +76,8 @@ public class SiteOverviewController{
     public void setMainApp(MainApp mainApp){
         this.mainApp=mainApp;
         
-        siteTable.setItems(mainApp.getSites());
+        siteTable.setItems(mainApp.getSites());      
+ //       labelTest.textProperty().bindBidirectional(mainApp.timeProperty());
     }
     private void showSiteDetails(Site site) {
     	if (site != null) {

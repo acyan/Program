@@ -15,17 +15,15 @@ import javafx.collections.FXCollections;
  */
 public class SiteWrapper {
     private String name;
-    private String status;
     private Boolean change;
     private ArrayList<PageWrapper> pages;
 
     public SiteWrapper(Site site) {
         this.name = site.getName();
-        this.status = site.getStatus();
         this.change = site.getChange();
         
         this.pages = new ArrayList<>();
-        site.getPages().forEach(p->this.pages.add(new PageWrapper(p.getName(),p.getStatus())));
+        site.getPages().forEach(p->this.pages.add(new PageWrapper(p.getName(),p.getSum())));
     }
 
     public Site getSite(){

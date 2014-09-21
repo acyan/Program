@@ -6,6 +6,9 @@
 
 package com.inspector.model;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -16,6 +19,7 @@ import javafx.beans.property.StringProperty;
 public class Page {
     private StringProperty name;
     private StringProperty status;
+    private StringProperty sum;
     
     public final void setName(String value) {
         nameProperty().set(value);
@@ -46,10 +50,26 @@ public class Page {
         }
         return status;
     }
+    
+    public final void setSum(String value) {
+        sumProperty().set(value);
+    }
 
+    public final String getSum() {
+        return sumProperty().get();
+    }
+
+    public StringProperty sumProperty() {
+        if (sum == null) {
+            sum = new SimpleStringProperty();
+        }
+        return sum;
+    }
+    
     public Page(String name) {
         setName(name);
         setStatus(null);
+        setSum(null);
     }
     
     

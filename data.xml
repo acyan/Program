@@ -1,27 +1,16 @@
 <list>
   <com.inspector.model.SiteWrapper>
-    <name>http://google.com</name>
-    <status>доступен</status>
-    <change>true</change>
-    <pages/>
-  </com.inspector.model.SiteWrapper>
-  <com.inspector.model.SiteWrapper>
     <name>http://yandex.ru</name>
-    <status>доступен</status>
-    <change>false</change>
+    <change>true</change>
     <pages>
       <com.inspector.model.PageWrapper>
-        <name>http://maps.yandex.ru</name>
+        <name>http://yandex.ru</name>
+        <sum>1bae86d46bad2710c7b265e9533203be</sum>
       </com.inspector.model.PageWrapper>
       <com.inspector.model.PageWrapper>
         <name>http://market.yandex.ru</name>
+        <sum>59ed2f1461dfb6e82290c1bbc254b7a4</sum>
       </com.inspector.model.PageWrapper>
     </pages>
-  </com.inspector.model.SiteWrapper>
-  <com.inspector.model.SiteWrapper>
-    <name>http://mail.ru</name>
-    <status>доступен</status>
-    <change>false</change>
-    <pages/>
   </com.inspector.model.SiteWrapper>
 </list>

@@ -16,11 +16,11 @@ import javafx.beans.property.StringProperty;
  */
 public class PageWrapper {
     private String name;
-    private String status;
+    private String sum;
 
-    public PageWrapper(String name, String status) {
+    public PageWrapper(String name, String sum) {
         this.name = name;
-        this.status = status;
+        this.sum = sum;
     }
    
     public Page getPage(){

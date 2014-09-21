@@ -82,13 +82,13 @@ public class Site {
 
     public Site() {
         setName("");
-        setStatus(null);
+        setStatus(Status.INACTIVE.getValue());
         setChange(false);
     }
     
     public Site(String name, Boolean change) {
         setName(name);
-        setStatus(null);
+        setStatus(Status.INACTIVE.getValue());
         setChange(change);
     }
     

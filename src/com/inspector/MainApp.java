@@ -6,12 +6,16 @@
 
 package com.inspector;
 
+import com.inspector.model.ChangesService;
 import com.inspector.model.FileUtil;
-import com.inspector.model.StatusService;
+import com.inspector.model.Message;
 import com.inspector.model.Page;
 import com.inspector.model.Site;
 import com.inspector.model.SiteWrapper;
+import com.inspector.model.Status;
+import com.inspector.model.StatusService;
 import com.inspector.model.UserPreferences;
+import com.inspector.views.MessagesViewController;
 import com.inspector.views.RootViewController;
 import com.inspector.views.SettingsViewController;
 import com.inspector.views.SiteEditDialogController;
@@ -23,21 +27,32 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.prefs.Preferences;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
 import javafx.concurrent.WorkerStateEvent;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
@@ -54,11 +69,16 @@ public class MainApp extends Application{
 
     private Stage primaryStage;
     private BorderPane rootLayout;
+    private TabPane tabPane;
 
     
     private ObservableList<Site> siteData = FXCollections.observableArrayList();
-    private StatusService service;
+    private ObservableList<Message> messages = FXCollections.observableArrayList();
+    
+    private StatusService statusService;
     private UserPreferences pref;
+    private ChangesService changesService;
+ //   private SimpleStringProperty time;
     
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -67,74 +87,116 @@ public class MainApp extends Application{
         this.primaryStage.setOnCloseRequest((WindowEvent event) -> {
             saveData();
         });
+        
         initRootLayout();
         showSiteOverview();
+        showMessagesView();
     }
 
     public MainApp() {
-        Site newSite = new Site("http://yandex.ru", Boolean.FALSE);
-        newSite.pagesProperty().add(new Page("http://maps.yandex.ru"));
+        Site newSite = new Site("http://yandex.ru", Boolean.TRUE);
+        newSite.pagesProperty().add(new Page("http://yandex.ru"));
         newSite.pagesProperty().add(new Page("http://market.yandex.ru"));
-        siteData.add(new Site("http://google.com", Boolean.TRUE));
+      //  siteData.add(new Site("http://google.com", Boolean.TRUE));
         siteData.add(newSite);
         loadData();
-        siteData.forEach(site->addFolders(site));
+        
+     //   siteData.forEach(site->addFolders(site));
         
         pref=new UserPreferences();
         pref.statusFrequencyProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             if(Integer.parseInt(newValue)>0){
                 
-                service.setPeriod(new Duration(Integer.parseInt(newValue)));  
-                if(!service.isRunning()){
-                    if(service.getState()==Worker.State.CANCELLED)
-                        service.restart();
+                statusService.setPeriod(new Duration(Integer.parseInt(newValue)));  
+                if(!statusService.isRunning()){
+                    if(statusService.getState()==Worker.State.CANCELLED)
+                        statusService.restart();
                     else
-                        service.start();
+                        statusService.start();
                     
                      System.out.println("сервис перезапущен");
                 }
             } else{
-                service.cancel();
+                statusService.cancel();
                 System.out.println("сервис завершен");
             }
 
         });
         
-        this.service = new StatusService(getUrl(siteData));
-        service.setDelay(new Duration(300));
-        service.setPeriod(new Duration(Integer.parseInt(pref.getStatusFrequency())));  
+        this.statusService = new StatusService(getUrl(siteData));
+        statusService.setDelay(new Duration(300));
+        statusService.setPeriod(new Duration(Integer.parseInt(pref.getStatusFrequency())));  
 
-     //   service.setPeriod(new Duration(10000)); 
-        service.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-
+     //   statusService.setPeriod(new Duration(10000)); 
+        statusService.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+        BlockingQueue<String> results = null;
             @Override
             public void handle(WorkerStateEvent event) {
-                BlockingQueue<String> results = (BlockingQueue<String>) event.getSource().getValue();
-                for(Site site:siteData){
+                results = (BlockingQueue<String>) event.getSource().getValue();
+                siteData.forEach((site) -> {
+                    if(!site.getStatus().equals(results.peek())){
+                        if(results.peek().equals(Status.ACTIVE.getValue()))
+                            addMessage("Сайт "+site.getName()+" доступен");
+                        else {
+                            addMessage("Сайт "+site.getName()+" не доступен");
+                        }
+                    }
                     site.setStatus(results.poll());
-//                    pref.getUserPrefs().putInt("item", pref.getUserPrefs().getInt("item", 0)+1);
-                }
-             //   time.setI(0);
+            });
+                
             }
         });
-        if(!service.getPeriod().lessThan(Duration.ONE))
-            service.start();
+        if(!statusService.getPeriod().lessThan(Duration.ONE))
+            statusService.start();
         
+        this.changesService = new ChangesService(getPages());
+        changesService.setDelay(new Duration(3000));
+        changesService.setPeriod(new Duration(5000));
+        
+        changesService.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+            BlockingQueue<String> results = null;
+            @Override
+            public void handle(WorkerStateEvent event) {
+                results = (BlockingQueue<String>) event.getSource().getValue();
+                siteData.forEach(site->{
+                    site.getPages().forEach(page->{
+                        if(page.getSum()==null){
+                            page.setSum(results.poll());
+                        } else if(!page.getSum().equals(results.peek())){
+                            addMessage("Произошли изменения на странице "+page.getName());
+                            page.setSum(results.poll());
+                            page.setStatus("yes");
+                        } else{
+                            page.setStatus("no");
+                        }
+                    });
+                });
+            }
+        });
+        changesService.start();
+//        time = new SimpleStringProperty("0");
+//        Timeline timer = new Timeline(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
+//
+//            @Override
+//            public void handle(ActionEvent event) {
+//                int val = Integer.parseInt(time.getValue());
+//                val++;
+//                time.setValue(new Integer(val).toString());
+//            }
+//        }));
+//        timer.setCycleCount(Timeline.INDEFINITE);
+//        timer.play();       
     }
     
 public void initRootLayout() {
     try {
-        // Load root layout from fxml file.
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(MainApp.class
                 .getResource("views/RootView.fxml"));
         rootLayout = (BorderPane) loader.load();
-
-        // Show the scene containing the root layout.
         Scene scene = new Scene(rootLayout);
         primaryStage.setScene(scene);
 
-        // Give the controller access to the main app.
         RootViewController controller = loader.getController();
         controller.setMainApp(this);
 
@@ -142,13 +204,6 @@ public void initRootLayout() {
     } catch (IOException e) {
         e.printStackTrace();
     }
-
-    //loadData();
-        // Try to load last opened person file.
-    //    File file = getFilePath();
-    //    if (file != null) {
-    //        loadData(file);
-    //    }
 }
 
     
@@ -157,8 +212,13 @@ public void initRootLayout() {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("views/SiteOverview.fxml"));
             AnchorPane siteOverview = (AnchorPane) loader.load();
+            tabPane = new TabPane();
+            tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+            Tab sitesTab = new Tab("Сайты");
+            sitesTab.setContent(siteOverview);
+            tabPane.getTabs().addAll(sitesTab);
             
-            rootLayout.setCenter(siteOverview);
+            rootLayout.setCenter(tabPane);
             
             SiteOverviewController controller = loader.getController();
             controller.setMainApp(this);
@@ -167,6 +227,23 @@ public void initRootLayout() {
         }
     }
 
+    public void showMessagesView() {
+        try{
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainApp.class.getResource("views/MessagesView.fxml"));
+            AnchorPane messagesView = (AnchorPane) loader.load();
+            
+            Tab messagesTab = new Tab("Уведомления");
+            messagesTab.setContent(messagesView);
+            tabPane.getTabs().add(messagesTab);
+            
+            MessagesViewController controller = loader.getController();
+            controller.setMainApp(this);
+            
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+    }
     
     public boolean showSiteEditDialog(Site site) {
             try {
@@ -302,36 +379,18 @@ public void initRootLayout() {
                 String pageName = s.getName().replace("http://", "").replaceAll("/", " ");
                 (new File("sites/"+name+"/"+pageName)).mkdirs();
                     });
-            
+           
         } catch(Exception e){
             
         }     
     }
     
-public static String md5Custom(String st) {
-    MessageDigest messageDigest = null;
-    byte[] digest = new byte[0];
- 
-    try {
-        messageDigest = MessageDigest.getInstance("MD5");
-        messageDigest.reset();
-        messageDigest.update(st.getBytes());
-        digest = messageDigest.digest();
-    } catch (NoSuchAlgorithmException e) {
-        // тут можно обработать ошибку
-        // возникает она если в передаваемый алгоритм в getInstance(,,,) не существует
-        e.printStackTrace();
+    public void addMessage(String name){
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+        String time = dateFormat.format(date);
+        messages.add(new Message(name, time));
     }
- 
-    BigInteger bigInt = new BigInteger(1, digest);
-    String md5Hex = bigInt.toString(16);
- 
-    while( md5Hex.length() < 32 ){
-        md5Hex = "0" + md5Hex;
-    }
- 
-    return md5Hex;
-}
     
     public Stage getPrimaryStage() {
             return primaryStage;
@@ -341,7 +400,7 @@ public static String md5Custom(String st) {
     }
     
     public StatusService getService(){
-        return service;
+        return statusService;
     }
     public UserPreferences getPreferences(){
         return pref;
@@ -354,6 +413,29 @@ public static String md5Custom(String st) {
         return result;
     }
     
+    public List<String> getPages(){
+        List<String> result = new ArrayList<>();
+        for(Site site:siteData){
+            if(site.getChange()){
+                for(Page page:site.getPages()){
+                   result.add(page.getName());
+               }               
+            }
+
+        }
+        return result;
+    }
+
+    public ObservableList<Message> getMessages() {
+        return messages;
+    }
+    
+//    public SimpleStringProperty timeProperty() {
+//        if (time == null) {
+//            time = new SimpleStringProperty();
+//        }
+//        return time;
+//    }    
     public static void main(String[] args) {
         launch(args);
     }

@@ -173,6 +173,8 @@ public class StatusService extends ScheduledService<BlockingQueue>{
                 }                
             } catch (Exception e){
                 
+            } finally{
+                connection.disconnect();
             }
             return code;
         }
