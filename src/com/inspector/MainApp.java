@@ -7,19 +7,21 @@
 package com.inspector;
 
 import com.inspector.model.ChangesService;
-import com.inspector.model.FileUtil;
+import com.inspector.util.DBAdapter;
+import com.inspector.util.FileUtil;
 import com.inspector.model.Message;
 import com.inspector.model.Page;
 import com.inspector.model.Site;
-import com.inspector.model.SiteWrapper;
-import com.inspector.model.Status;
+import com.inspector.util.SiteWrapper;
+import com.inspector.util.Status;
 import com.inspector.model.StatusService;
 import com.inspector.model.UserPreferences;
-import com.inspector.views.MessagesViewController;
-import com.inspector.views.RootViewController;
-import com.inspector.views.SettingsViewController;
-import com.inspector.views.SiteEditDialogController;
-import com.inspector.views.SiteOverviewController;
+import com.inspector.controllers.MessagesViewController;
+import com.inspector.controllers.RootViewController;
+import com.inspector.controllers.SettingsViewController;
+import com.inspector.controllers.SiteEditDialogController;
+import com.inspector.controllers.SiteOverviewController;
+import com.inspector.controllers.StatisticsViewController;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.extended.DurationConverter;
 import java.io.File;
@@ -78,7 +80,7 @@ public class MainApp extends Application{
     private StatusService statusService;
     private UserPreferences pref;
     private ChangesService changesService;
- //   private SimpleStringProperty time;
+    private DBAdapter adapter;
     
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -100,8 +102,7 @@ public class MainApp extends Application{
       //  siteData.add(new Site("http://google.com", Boolean.TRUE));
         siteData.add(newSite);
         loadData();
-        
-     //   siteData.forEach(site->addFolders(site));
+        adapter = new DBAdapter(getPages());
         
         pref=new UserPreferences();
         pref.statusFrequencyProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
@@ -126,8 +127,6 @@ public class MainApp extends Application{
         this.statusService = new StatusService(getUrl(siteData));
         statusService.setDelay(new Duration(300));
         statusService.setPeriod(new Duration(Integer.parseInt(pref.getStatusFrequency())));  
-
-     //   statusService.setPeriod(new Duration(10000)); 
         statusService.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
         BlockingQueue<String> results = null;
             @Override
@@ -163,6 +162,8 @@ public class MainApp extends Application{
                         if(page.getSum()==null){
                             page.setSum(results.poll());
                         } else if(!page.getSum().equals(results.peek())){
+                            adapter.insertDate(page.getName());
+                            adapter.getCount(page.getName());
                             addMessage("Произошли изменения на странице "+page.getName());
                             page.setSum(results.poll());
                             page.setStatus("yes");
@@ -174,6 +175,8 @@ public class MainApp extends Application{
             }
         });
         changesService.start();
+        
+
 //        time = new SimpleStringProperty("0");
 //        Timeline timer = new Timeline(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
 //
@@ -298,8 +301,29 @@ public void initRootLayout() {
                     e.printStackTrace();
                     return false;
             }
-  
     }
+    
+public void showStatistics() {
+    try {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(MainApp.class.getResource("views/StatisticsView.fxml"));
+        AnchorPane page = (AnchorPane) loader.load();
+        Stage dialogStage = new Stage();
+        dialogStage.setTitle("Статистика");
+        dialogStage.initModality(Modality.WINDOW_MODAL);
+        dialogStage.initOwner(primaryStage);
+        Scene scene = new Scene(page);
+        dialogStage.setScene(scene);
+
+        StatisticsViewController controller = loader.getController();
+        controller.setData(getPages(),getAdapter());
+
+        dialogStage.show();
+
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
     public void loadData() {
       XStream xstream = new XStream();
       xstream.alias("person", Site.class);
@@ -398,10 +422,15 @@ public void initRootLayout() {
     public ObservableList<Site> getSites(){
         return siteData;
     }
-    
-    public StatusService getService(){
+
+    public StatusService getStatusService() {
         return statusService;
     }
+
+    public ChangesService getChangesService() {
+        return changesService;
+    }
+    
     public UserPreferences getPreferences(){
         return pref;
     }
@@ -424,6 +453,10 @@ public void initRootLayout() {
 
         }
         return result;
+    }
+
+    public DBAdapter getAdapter() {
+        return adapter;
     }
 
     public ObservableList<Message> getMessages() {

@@ -4,8 +4,9 @@
  * and open the template in the editor.
  */
 
-package com.inspector.model;
+package com.inspector.util;
 
+import com.inspector.model.Page;
 import java.util.ArrayList;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;

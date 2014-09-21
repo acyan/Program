@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package com.inspector.views;
+package com.inspector.controllers;
 
 import com.inspector.model.Page;
 import com.inspector.model.Site;

@@ -4,8 +4,11 @@
  * and open the template in the editor.
  */
 
-package com.inspector.model;
+package com.inspector.util;
 
+import com.inspector.model.Page;
+import com.inspector.model.Site;
+import com.inspector.util.PageWrapper;
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
 

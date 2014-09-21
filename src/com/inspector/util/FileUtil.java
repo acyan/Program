@@ -1,4 +1,4 @@
-package com.inspector.model;
+package com.inspector.util;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

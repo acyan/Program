@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.inspector.views.RootViewController">
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.inspector.controllers.RootViewController">
 <top><MenuBar BorderPane.alignment="CENTER">
   <menus>
     <Menu mnemonicParsing="false" text="Файл">
@@ -13,7 +13,10 @@
                   <MenuItem mnemonicParsing="false" onAction="#handleSettings" text="Настройки" />
       </items>
     </Menu>
-    <Menu mnemonicParsing="false" text="Настройки" />
+    <Menu mnemonicParsing="false" text="Настройки">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#handleStatistics" text="Unspecified Action" />
+               </items></Menu>
     <Menu mnemonicParsing="false" text="Помощь">
       <items>
         <MenuItem mnemonicParsing="false" text="About" />

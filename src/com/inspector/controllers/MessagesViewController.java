@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package com.inspector.views;
+package com.inspector.controllers;
 
 import com.inspector.MainApp;
 import com.inspector.model.Message;
@@ -57,7 +57,6 @@ public class MessagesViewController{
             @Override
             public void onChanged(ListChangeListener.Change<? extends Message> c) {
                 c.next();
-                System.out.println("loool");
                 if(messageTable.getItems().size()>20){
                     messageTable.getItems().remove(0);
                 }

@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package com.inspector.model;
+package com.inspector.util;
 
 /**
  *

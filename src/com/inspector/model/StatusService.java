@@ -6,7 +6,7 @@
 
 package com.inspector.model;
 
-import com.inspector.model.Status;
+import com.inspector.util.Status;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -46,7 +46,6 @@ public class StatusService extends ScheduledService<BlockingQueue>{
     @Override
     protected Task<BlockingQueue> createTask() {
         final Task<BlockingQueue> task;
-        System.out.println("lol");
         task = new Task<BlockingQueue>(){
         
             @Override

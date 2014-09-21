@@ -1,16 +1,16 @@
 <list>
-  <com.inspector.model.SiteWrapper>
+  <com.inspector.util.SiteWrapper>
     <name>http://yandex.ru</name>
     <change>true</change>
     <pages>
-      <com.inspector.model.PageWrapper>
+      <com.inspector.util.PageWrapper>
         <name>http://yandex.ru</name>
-        <sum>1bae86d46bad2710c7b265e9533203be</sum>
-      </com.inspector.model.PageWrapper>
-      <com.inspector.model.PageWrapper>
+        <sum>4e4853176ee1453fd7ec7d349f8a4da4</sum>
+      </com.inspector.util.PageWrapper>
+      <com.inspector.util.PageWrapper>
         <name>http://market.yandex.ru</name>
-        <sum>59ed2f1461dfb6e82290c1bbc254b7a4</sum>
-      </com.inspector.model.PageWrapper>
+        <sum>544856dc72fc93bf6f16a2f0bbd0b82a</sum>
+      </com.inspector.util.PageWrapper>
     </pages>
-  </com.inspector.model.SiteWrapper>
+  </com.inspector.util.SiteWrapper>
 </list>

@@ -1,4 +1,4 @@
-package com.inspector.views;
+package com.inspector.controllers;
 
 import com.inspector.MainApp;
 import java.io.File;
@@ -119,5 +119,10 @@ public class RootViewController {
     @FXML
     private void handleSettings(){
         mainApp.showSettingsView();
+    }
+    
+    @FXML
+    private void handleStatistics(){
+        mainApp.showStatistics();
     }
 }

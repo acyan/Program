@@ -4,23 +4,17 @@
  * and open the template in the editor.
  */
 
-package com.inspector.views;
+package com.inspector.controllers;
 
 import com.inspector.MainApp;
 import com.inspector.model.Page;
 import com.inspector.model.Site;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.util.Duration;
 import org.controlsfx.dialog.Dialogs;
 /**
  * FXML Controller class
@@ -103,7 +97,7 @@ public class SiteOverviewController{
             int selectedIndex = siteTable.getSelectionModel().getSelectedIndex();
             if (selectedIndex >= 0) {
                     siteTable.getItems().remove(selectedIndex);
-                    mainApp.getService().setSites(mainApp.getUrl(mainApp.getSites()));
+                    mainApp.getStatusService().setSites(mainApp.getUrl(mainApp.getSites()));
                     mainApp.getSites().forEach(h->System.out.println(h.getName()));
             } else {
                     // Nothing selected.
@@ -123,7 +117,12 @@ public class SiteOverviewController{
             if (okClicked) {
                     mainApp.getSites().add(temp);
                     mainApp.getSites().forEach(f->System.out.println(f.getName()));
-                    mainApp.getService().getSites().add(temp.getName());
+                    mainApp.getStatusService().getSites().add(temp.getName());
+                    temp.getPages().forEach(t->{
+                        mainApp.getChangesService().getSites().add(t.getName());
+                        mainApp.getAdapter().insertDate(t.getName());
+                            });
+                    
             }
     }  
     
