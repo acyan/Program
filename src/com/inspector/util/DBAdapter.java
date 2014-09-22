@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -34,12 +35,19 @@ public class DBAdapter {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(DBAdapter.class.getName()).log(Level.SEVERE, null, ex);
         }
-        String query = "create table test(id int NOT NULL auto_increment, name varchar(255), time timestamp, primary key(id))";
+        String query = "create table if not exists test(id int NOT NULL auto_increment, name varchar(255), time timestamp, primary key(id))";
         try(Connection connection = DriverManager.getConnection("jdbc:h2:./test");
-            Statement statement = connection.createStatement(); ){
+            Statement statement = connection.createStatement();
+                ){
             statement.execute(query);
+            ResultSet rs = statement.executeQuery("select name from test group by name");
+            List<String> result = new ArrayList<>();
+            while(rs.next()){
+                result.add(rs.getString("name"));
+            }
             for(String page: pages){
-                statement.execute("insert into test(name,time) values('"+page+"','"+getCurrentJavaSqlTimestamp()+"')");
+                if(!result.contains(page))
+                    statement.execute("insert into test(name,time) values('"+page+"','"+getCurrentJavaSqlTimestamp()+"')");
             }
             
         } catch(SQLException e){

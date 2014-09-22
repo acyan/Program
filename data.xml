@@ -5,7 +5,7 @@
     <pages>
       <com.inspector.util.PageWrapper>
         <name>http://market.yandex.ru</name>
-        <sum>a1f6a3db08720061c5b0599e1a74fab1</sum>
+        <sum>617741acbf9cc7911fc47c438b9b3965</sum>
       </com.inspector.util.PageWrapper>
       <com.inspector.util.PageWrapper>
         <name>http://maps.yandex.ru</name>
@@ -23,7 +23,7 @@
     <pages>
       <com.inspector.util.PageWrapper>
         <name>http://mail.ru</name>
-        <sum>a0ce753f12d12eeda43b89b21d880d26</sum>
+        <sum>11b7be1bc209a4076a59897f01a2c061</sum>
       </com.inspector.util.PageWrapper>
     </pages>
   </com.inspector.util.SiteWrapper>
