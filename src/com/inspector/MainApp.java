@@ -153,7 +153,7 @@ public class MainApp extends Application{
                         site.getPages().forEach(page->{
                              if(!page.getOldSum().equals(page.getNewSum())){
                                 adapter.insertDate(page.getName());
-                                adapter.getCount(page.getName());
+                          //      adapter.getCountAll(page.getName());
                                 addMessage("Произошли изменения на странице "+page.getName());
                                 page.setStatus("yes");
                             } else{

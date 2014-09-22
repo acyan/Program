@@ -5,13 +5,13 @@
     <pages>
       <com.inspector.util.PageWrapper>
         <name>http://yandex.ru</name>
-        <oldSum>b26981bb876519bcbdd486f337bc770f</oldSum>
-        <newSum>6a32279a68bfbb39ed8aef10f41458a3</newSum>
+        <oldSum>e8b1ffb11b0d65fb3f0dc4caf2ff3662</oldSum>
+        <newSum>a1094f03a81b481e6477a998fee8acee</newSum>
       </com.inspector.util.PageWrapper>
       <com.inspector.util.PageWrapper>
         <name>http://market.yandex.ru</name>
-        <oldSum>c5fb30dcb72ac8f77d0e075d58d3f148</oldSum>
-        <newSum>2b704011363ecdf0787318841ca4ad53</newSum>
+        <oldSum>0a810627e820562637d10ba8e5c679c3</oldSum>
+        <newSum>35b525c6335327b8b00911898869aa00</newSum>
       </com.inspector.util.PageWrapper>
     </pages>
   </com.inspector.util.SiteWrapper>

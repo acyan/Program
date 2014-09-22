@@ -15,7 +15,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -81,7 +83,7 @@ public class DBAdapter {
 //        }
     }
     
-    public int getCount(String name){
+    public int getCountAll(String name){
         int result = 0;
         String query = "select count(*) from test where name = '"+name+"'";
         try(Connection connection = DriverManager.getConnection("jdbc:h2:./test");
@@ -97,8 +99,68 @@ public class DBAdapter {
         }
         return result;
     }
+    
+    public int getCountToday(String name){
+        int result = 0;
+        Calendar calendar = new GregorianCalendar();
+        calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        
+        Timestamp date = new Timestamp(calendar.getTime().getTime());
+        System.out.println(date);
+        
+        String query = "select count(*) from test where name = ? and time>?";
+        try(Connection connection = DriverManager.getConnection("jdbc:h2:./test");
+            PreparedStatement statement = connection.prepareStatement(query);){
+                    statement.setString(1, name);
+                    statement.setTimestamp(2, date);
+                    ResultSet rs = statement.executeQuery();
+                    while (rs.next()) {
+                        result = rs.getInt("count(*)");
+                        System.out.println(name+" - "+rs.getInt("count(*)"));
+                    }
+            
+        } catch(SQLException e ){
+            e.printStackTrace();
+        }
+        return result;
+        
+    }
+    
+    public int getCountWeek(String name){
+        int result = 0;
+        Date today = new Date();
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(today);
+        calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR)-7);
+        calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        System.out.println(calendar.getTime());
+        Timestamp date = new Timestamp(calendar.getTime().getTime());
+        System.out.println(date);
+        
+        String query = "select count(*) from test where name = ? and time>?";
+        try(Connection connection = DriverManager.getConnection("jdbc:h2:./test");
+            PreparedStatement statement = connection.prepareStatement(query);){
+                    statement.setString(1, name);
+                    statement.setTimestamp(2, date);
+                    ResultSet rs = statement.executeQuery();
+                    while (rs.next()) {
+                        result = rs.getInt("count(*)");
+                        System.out.println(name+" - "+rs.getInt("count(*)"));
+                    }
+            
+        } catch(SQLException e ){
+            e.printStackTrace();
+        }
+        return result;
+        
+    }
     private Timestamp getCurrentJavaSqlTimestamp() {
-      java.util.Date date = new java.util.Date();
+      Date date = new Date();
+      
       return new Timestamp(date.getTime());
     }   
 }

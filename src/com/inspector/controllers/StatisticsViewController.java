@@ -25,11 +25,18 @@ import javafx.scene.chart.XYChart;
  */
 public class StatisticsViewController {
     @FXML
-    private BarChart<String, Integer> chart;
-
+    private BarChart<String, Integer> chartToday;
+    @FXML
+    private BarChart<String, Integer> chartWeek;
+    @FXML
+    private BarChart<String, Integer> chartAll;
     @FXML
     private CategoryAxis xAxis;
-
+    @FXML
+    private CategoryAxis xAxis1;
+    @FXML
+    private CategoryAxis xAxis2;
+    
     private ObservableList<String> pages = FXCollections.observableArrayList();
     private DBAdapter adapter;
     /**
@@ -46,19 +53,38 @@ public class StatisticsViewController {
         this.adapter = adapter;
         pages = FXCollections.observableArrayList(names);
         xAxis.setCategories(pages);
+        xAxis1.setCategories(pages);
+        xAxis2.setCategories(pages);
         
-        int[] counter = new int[pages.size()];
+        int[] todayCount = new int[pages.size()];
+        int[] weekCount = new int[pages.size()];
+        int[] allCount = new int[pages.size()];
+        
         for(int i=0;i<pages.size();i++){
-            int count = adapter.getCount(pages.get(i))-1;
-            counter[i]=count;
+            todayCount[i]=  adapter.getCountToday(pages.get(i))-1;
+            weekCount[i] = adapter.getCountWeek(pages.get(i))-1;
+            allCount[i] = adapter.getCountAll(pages.get(i))-1;            
         }
         
-        XYChart.Series<String, Integer> series = new XYChart.Series<>();
+        XYChart.Series<String, Integer> seriesToday = new XYChart.Series<>();
+        XYChart.Series<String, Integer> seriesWeek = new XYChart.Series<>();    
+        XYChart.Series<String, Integer> seriesAll = new XYChart.Series<>();
         
-        for (int i = 0; i < counter.length; i++) {
-        	series.getData().add(new XYChart.Data<>(pages.get(i), counter[i]));
-        }
+        for (int i = 0; i < todayCount.length; i++) {
+        	seriesToday.getData().add(new XYChart.Data<>(pages.get(i), todayCount[i]));
+        }  
+        chartToday.getData().add(seriesToday);      
         
-        chart.getData().add(series);
+        for (int i = 0; i < weekCount.length; i++) {
+        	seriesWeek.getData().add(new XYChart.Data<>(pages.get(i), weekCount[i]));
+        }   
+        chartWeek.getData().add(seriesWeek); 
+        
+        for (int i = 0; i < allCount.length; i++) {
+        	seriesAll.getData().add(new XYChart.Data<>(pages.get(i), allCount[i]));
+        }        
+        chartAll.getData().add(seriesAll); 
+    
     }
+    
 }
