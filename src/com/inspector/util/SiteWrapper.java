@@ -26,7 +26,7 @@ public class SiteWrapper {
         this.change = site.getChange();
         
         this.pages = new ArrayList<>();
-        site.getPages().forEach(p->this.pages.add(new PageWrapper(p.getName(),p.getSum())));
+        site.getPages().forEach(p->this.pages.add(new PageWrapper(p.getName(),p.getOldSum(), p.getNewSum())));
     }
 
     public Site getSite(){

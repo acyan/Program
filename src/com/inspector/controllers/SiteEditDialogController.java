@@ -6,8 +6,16 @@
 
 package com.inspector.controllers;
 
+import com.inspector.MainApp;
 import com.inspector.model.Page;
 import com.inspector.model.Site;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
@@ -39,8 +47,11 @@ public class SiteEditDialogController {
     @FXML
     private TextField pageName;
     
+    private MainApp mainApp;
     private Stage dialogStage;
     private Site site;
+    private ObservableList<Page> pages;
+    
     private boolean okClicked = false;
     /**
      * Initializes the controller class.
@@ -54,8 +65,9 @@ public class SiteEditDialogController {
         this.dialogStage = dialogStage;
     } 
     
-    public void setSite(Site site){
+    public void setSite(Site site,MainApp mainApp){
         this.site=site;
+        this.mainApp = mainApp;
         
         addressField.setText(site.getName());
         if(site.getChange()){
@@ -63,7 +75,8 @@ public class SiteEditDialogController {
         }else{
             noRadioButton.setSelected(true);
         }
-        pagesList.setItems(site.pagesProperty());
+        pages = FXCollections.observableList(new ArrayList<>(site.pagesProperty()));
+        pagesList.setItems(pages);
     }
     
     public boolean isOkClicked() {
@@ -72,7 +85,7 @@ public class SiteEditDialogController {
 
     @FXML
     private void handleAdd(){
-        site.pagesProperty().add(new Page(pageName.getText()));
+        pagesList.getItems().add(new Page(pageName.getText()));
         
         pageName.setText("");
     }
@@ -81,9 +94,7 @@ public class SiteEditDialogController {
     private void handleDelete(){
             int selectedIndex = pagesList.getSelectionModel().getSelectedIndex();
             if (selectedIndex >= 0) {
-                    pagesList.getItems().remove(selectedIndex);
-
-                    
+                pages.remove(selectedIndex);       
             } else {
                     // Nothing selected.
                     Dialogs.create()
@@ -97,6 +108,8 @@ public class SiteEditDialogController {
     private void handleOk() {
             site.setName(addressField.getText());
             site.setChange(yesRadioButton.isSelected());
+            site.setPages(pages);                    
+            mainApp.getChangesService().setSites(new ArrayList<>(mainApp.getSites()));
             
             okClicked = true;
             dialogStage.close();

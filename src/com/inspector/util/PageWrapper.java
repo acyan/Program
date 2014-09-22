@@ -17,13 +17,15 @@ import javafx.beans.property.StringProperty;
  */
 public class PageWrapper {
     private String name;
-    private String sum;
+    private String oldSum;
+    private String newSum;
 
-    public PageWrapper(String name, String sum) {
+    public PageWrapper(String name, String oldSum, String newSum) {
         this.name = name;
-        this.sum = sum;
+        this.oldSum = oldSum;
+        this.newSum = newSum;
     }
-   
+    
     public Page getPage(){
         Page page = new Page(this.name);
         return page;

@@ -7,7 +7,12 @@
 package com.inspector.model;
 
 import com.sun.corba.se.spi.copyobject.CopierManager;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.math.BigInteger;
+import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -28,6 +33,7 @@ public class ChangesService extends ScheduledService<BlockingQueue>{
 
     private BlockingQueue<String> sites;
     
+    
     public BlockingQueue<String> getSites() {
         return sites;
     }
@@ -44,6 +50,7 @@ public class ChangesService extends ScheduledService<BlockingQueue>{
     @Override
     protected Task<BlockingQueue> createTask() {
         final Task<BlockingQueue> task;
+        
         task = new Task<BlockingQueue>() {
             BlockingQueue<String> result = new LinkedBlockingQueue<>();
             Element doc;
@@ -53,7 +60,30 @@ public class ChangesService extends ScheduledService<BlockingQueue>{
             protected BlockingQueue<String> call(){
                 try{
                     for(String page:sites){
-                        doc = Jsoup.parse(new URL(page),5000).select("body").first();
+                        URL site = new URL(page);
+                        Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("172.16.0.3", 3128));
+                        HttpURLConnection connection = (HttpURLConnection) site.openConnection();
+                        
+                        connection.setRequestMethod("GET");
+
+                        connection.setReadTimeout(10000);
+                        connection.connect();
+                        int code = connection.getResponseCode();
+                        
+                        if(code == 302){
+                            site = new URL(connection.getHeaderField("Location"));
+                            connection = (HttpURLConnection) site.openConnection();
+                        }
+                        
+                        String line = null;
+                        StringBuffer tmp = new StringBuffer();
+                        BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                        while ((line = in.readLine()) != null) {
+                          tmp.append(line);
+                        }
+                        in.close();
+                        connection.disconnect();
+                        doc = Jsoup.parse(String.valueOf(tmp)).select("body").first();
                         text = doc.text();
                         md5 = md5Custom(text);
                         result.add(md5);

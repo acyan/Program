@@ -19,7 +19,8 @@ import javafx.beans.property.StringProperty;
 public class Page {
     private StringProperty name;
     private StringProperty status;
-    private StringProperty sum;
+    private StringProperty oldSum;
+    private StringProperty newSum;
     
     public final void setName(String value) {
         nameProperty().set(value);
@@ -51,25 +52,41 @@ public class Page {
         return status;
     }
     
-    public final void setSum(String value) {
-        sumProperty().set(value);
+    public final void setNewSum(String value) {
+        newSumProperty().set(value);
     }
 
-    public final String getSum() {
-        return sumProperty().get();
+    public final String getNewSum() {
+        return newSumProperty().get();
     }
 
-    public StringProperty sumProperty() {
-        if (sum == null) {
-            sum = new SimpleStringProperty();
+    public StringProperty newSumProperty() {
+        if (newSum == null) {
+            newSum = new SimpleStringProperty();
         }
-        return sum;
+        return newSum;
+    }
+
+    public final void setOldSum(String value) {
+        oldSumProperty().set(value);
+    }
+
+    public final String getOldSum() {
+        return oldSumProperty().get();
+    }
+
+    public StringProperty oldSumProperty() {
+        if (oldSum == null) {
+            oldSum = new SimpleStringProperty();
+        }
+        return oldSum;
     }
     
     public Page(String name) {
         setName(name);
         setStatus(null);
-        setSum(null);
+        setNewSum("0");
+        setOldSum("0");
     }
     
     

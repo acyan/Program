@@ -4,26 +4,14 @@
     <change>true</change>
     <pages>
       <com.inspector.util.PageWrapper>
+        <name>http://yandex.ru</name>
+        <oldSum>b26981bb876519bcbdd486f337bc770f</oldSum>
+        <newSum>6a32279a68bfbb39ed8aef10f41458a3</newSum>
+      </com.inspector.util.PageWrapper>
+      <com.inspector.util.PageWrapper>
         <name>http://market.yandex.ru</name>
-        <sum>617741acbf9cc7911fc47c438b9b3965</sum>
-      </com.inspector.util.PageWrapper>
-      <com.inspector.util.PageWrapper>
-        <name>http://maps.yandex.ru</name>
-        <sum>a0ce753f12d12eeda43b89b21d880d26</sum>
-      </com.inspector.util.PageWrapper>
-      <com.inspector.util.PageWrapper>
-        <name>http://slovari.yandex.ru/</name>
-        <sum>a0ce753f12d12eeda43b89b21d880d26</sum>
-      </com.inspector.util.PageWrapper>
-    </pages>
-  </com.inspector.util.SiteWrapper>
-  <com.inspector.util.SiteWrapper>
-    <name>http://mail.ru</name>
-    <change>true</change>
-    <pages>
-      <com.inspector.util.PageWrapper>
-        <name>http://mail.ru</name>
-        <sum>11b7be1bc209a4076a59897f01a2c061</sum>
+        <oldSum>c5fb30dcb72ac8f77d0e075d58d3f148</oldSum>
+        <newSum>2b704011363ecdf0787318841ca4ad53</newSum>
       </com.inspector.util.PageWrapper>
     </pages>
   </com.inspector.util.SiteWrapper>

@@ -6,51 +6,39 @@
 
 package com.inspector;
 
-import com.inspector.model.ChangesService;
-import com.inspector.util.DBAdapter;
-import com.inspector.util.FileUtil;
-import com.inspector.model.Message;
-import com.inspector.model.Page;
-import com.inspector.model.Site;
-import com.inspector.util.SiteWrapper;
-import com.inspector.util.Status;
-import com.inspector.model.StatusService;
-import com.inspector.model.UserPreferences;
 import com.inspector.controllers.MessagesViewController;
 import com.inspector.controllers.RootViewController;
 import com.inspector.controllers.SettingsViewController;
 import com.inspector.controllers.SiteEditDialogController;
 import com.inspector.controllers.SiteOverviewController;
 import com.inspector.controllers.StatisticsViewController;
+import com.inspector.model.ChangesService2;
+import com.inspector.model.Message;
+import com.inspector.model.Page;
+import com.inspector.model.Site;
+import com.inspector.model.StatusService;
+import com.inspector.model.UserPreferences;
+import com.inspector.util.DBAdapter;
+import com.inspector.util.FileUtil;
+import com.inspector.util.SiteWrapper;
+import com.inspector.util.Status;
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.converters.extended.DurationConverter;
 import java.io.File;
 import java.io.IOException;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.prefs.Preferences;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
 import javafx.concurrent.WorkerStateEvent;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -62,7 +50,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
-import javafx.util.converter.*;
 
 /**
  *
@@ -80,7 +67,7 @@ public class MainApp extends Application{
     
     private StatusService statusService;
     private UserPreferences pref;
-    private ChangesService changesService;
+    private ChangesService2 changesService;
     private DBAdapter adapter;
     
     @Override
@@ -149,25 +136,25 @@ public class MainApp extends Application{
         if(!statusService.getPeriod().lessThan(Duration.ONE))
             statusService.start();
         
-        this.changesService = new ChangesService(getPages());
+        this.changesService = new ChangesService2(new ArrayList<>(siteData));
         changesService.setDelay(new Duration(3000));
-        changesService.setPeriod(new Duration(60000));
+        changesService.setPeriod(new Duration(10000));
         
         changesService.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-            BlockingQueue<String> results = null;
+            CopyOnWriteArrayList<Site> results = null;
             @Override
             public void handle(WorkerStateEvent event) {
-                results = (BlockingQueue<String>) event.getSource().getValue();
+                results = (CopyOnWriteArrayList<Site>) event.getSource().getValue();
+                System.out.println(changesService.getState());
+                siteData.clear();
+                siteData.addAll(results);               
                 siteData.forEach(site->{
                     if(site.getChange()){
                         site.getPages().forEach(page->{
-                            if(page.getSum()==null){
-                                page.setSum(results.poll());
-                            } else if(!page.getSum().equals(results.peek())){
+                             if(!page.getOldSum().equals(page.getNewSum())){
                                 adapter.insertDate(page.getName());
                                 adapter.getCount(page.getName());
                                 addMessage("Произошли изменения на странице "+page.getName());
-                                page.setSum(results.poll());
                                 page.setStatus("yes");
                             } else{
                                 page.setStatus("no");
@@ -177,26 +164,29 @@ public class MainApp extends Application{
                 });
             }
         });
+        
+        System.out.println(changesService.getState());
         changesService.start();
-        for(Site site: siteData){
-            site.changeProperty().addListener(new ChangeListener<Boolean>() {
-
-                @Override
-                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-
-                    changesService.setSites(getPages());
-                        
-                }
-            });
-            site.getPages().addListener(new ListChangeListener<Page>() {
-
-                @Override
-                public void onChanged(ListChangeListener.Change<? extends Page> c) {
-                    
-                    changesService.setSites(getPages());
-                }
-            });
-        }
+        System.out.println(changesService.getState());
+//        for(Site site: siteData){
+//            site.changeProperty().addListener(new ChangeListener<Boolean>() {
+//
+//                @Override
+//                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+//
+//                    changesService.setSites(getPages());
+//                        
+//                }
+//            });
+//            site.getPages().addListener(new ListChangeListener<Page>() {
+//
+//                @Override
+//                public void onChanged(ListChangeListener.Change<? extends Page> c) {
+//                    
+//                    changesService.setSites(getPages());
+//                }
+//            });
+//        }
 
 //        time = new SimpleStringProperty("0");
 //        Timeline timer = new Timeline(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
@@ -287,7 +277,7 @@ public void initRootLayout() {
                     // Set the person into the controller.
                     SiteEditDialogController controller = loader.getController();
                     controller.setDialogStage(dialogStage);
-                    controller.setSite(site);
+                    controller.setSite(site, this);
 
                     // Show the dialog and wait until the user closes it
                     dialogStage.showAndWait();
@@ -448,7 +438,7 @@ public void showStatistics() {
         return statusService;
     }
 
-    public ChangesService getChangesService() {
+    public ChangesService2 getChangesService() {
         return changesService;
     }
     

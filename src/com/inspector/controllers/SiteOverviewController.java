@@ -9,6 +9,7 @@ package com.inspector.controllers;
 import com.inspector.MainApp;
 import com.inspector.model.Page;
 import com.inspector.model.Site;
+import java.util.ArrayList;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -93,12 +94,13 @@ public class SiteOverviewController{
     }
     
     @FXML
-    private void handleDeletePerson() {
+    private void handleDeleteSite() {
             int selectedIndex = siteTable.getSelectionModel().getSelectedIndex();
             if (selectedIndex >= 0) {
-                    siteTable.getItems().remove(selectedIndex);
-                    mainApp.getStatusService().setSites(mainApp.getUrl(mainApp.getSites()));
-                    mainApp.getSites().forEach(h->System.out.println(h.getName()));
+                siteTable.getItems().remove(selectedIndex);
+                mainApp.getStatusService().setSites(mainApp.getUrl(mainApp.getSites()));
+                mainApp.getSites().forEach(h->System.out.println(h.getName()));
+            mainApp.getChangesService().setSites(new ArrayList<>(mainApp.getSites()));
             } else {
                     // Nothing selected.
                     Dialogs.create()
@@ -111,23 +113,19 @@ public class SiteOverviewController{
 
 
     @FXML
-    private void handleNewPerson() {
+    private void handleNewSite() {
             Site temp = new Site();
             boolean okClicked = mainApp.showSiteEditDialog(temp);
             if (okClicked) {
-                    mainApp.getSites().add(temp);
-                    mainApp.getSites().forEach(f->System.out.println(f.getName()));
-                    mainApp.getStatusService().getSites().add(temp.getName());
-                    temp.getPages().forEach(t->{
-                        mainApp.getChangesService().getSites().add(t.getName());
-                        mainApp.getAdapter().insertDate(t.getName());
-                            });
-                    
+                mainApp.getSites().add(temp);
+                mainApp.getSites().forEach(f->System.out.println(f.getName()));
+                mainApp.getStatusService().getSites().add(temp.getName());
+                mainApp.getChangesService().setSites(new ArrayList<>(mainApp.getSites()));          
             }
     }  
     
     @FXML
-    private void handleEditPerson() {
+    private void handleEditSite() {
             Site selectedItem = siteTable.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
                     boolean okClicked = mainApp.showSiteEditDialog(selectedItem);
@@ -136,12 +134,15 @@ public class SiteOverviewController{
                     }
 
             } else {
-                    // Nothing selected.
                     Dialogs.create()
                             .title("No Selection")
                             .masthead("No Person Selected")
                             .message("Please select a person in the table.")
                             .showWarning();
             }
+    }
+    @FXML
+    private void handleTest() {
+        labelTest.setText(mainApp.getChangesService().getState().toString());
     }
 }

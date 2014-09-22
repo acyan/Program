@@ -17,7 +17,6 @@
 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
 </columnResizePolicy>
 </TableView>
-                  <Label fx:id="labelTest" layoutX="50.0" layoutY="277.0" prefHeight="15.0" prefWidth="96.0" text="Label" />
 </children></AnchorPane>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="298.0" prefWidth="393.0">
 <children><Label layoutX="7.0" layoutY="6.0" text="Настройки" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" /><GridPane layoutX="14.0" layoutY="33.0" prefHeight="219.0" prefWidth="372.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.0">
@@ -48,8 +47,10 @@
 </children>
 </GridPane>
 <HBox layoutX="215.0" layoutY="259.0" spacing="5.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0">
-<children><Button fx:id="addButton" layoutX="112.1875" layoutY="259.0" mnemonicParsing="false" onAction="#handleNewPerson" text="Добавить" /><Button fx:id="editButton" layoutX="167.0" layoutY="259.0" mnemonicParsing="false" onAction="#handleEditPerson" text="Редактировать" /><Button fx:id="deleteButton" layoutX="221.0" layoutY="259.0" mnemonicParsing="false" onAction="#handleDeletePerson" text="Удалить" /></children>
+<children><Button fx:id="addButton" layoutX="112.1875" layoutY="259.0" mnemonicParsing="false" onAction="#handleNewSite" text="Добавить" /><Button fx:id="editButton" layoutX="167.0" layoutY="259.0" mnemonicParsing="false" onAction="#handleEditSite" text="Редактировать" /><Button fx:id="deleteButton" layoutX="221.0" layoutY="259.0" mnemonicParsing="false" onAction="#handleDeleteSite" text="Удалить" /></children>
 </HBox>
+                  <Button layoutX="33.0" layoutY="265.0" mnemonicParsing="false" onAction="#handleTest" text="Button" />
+                  <Label fx:id="labelTest" layoutX="14.0" layoutY="242.0" prefHeight="15.0" prefWidth="96.0" />
 </children></AnchorPane>
   </items>
 </SplitPane>

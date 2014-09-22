@@ -140,7 +140,6 @@ public class StatusService extends ScheduledService<BlockingQueue>{
             String result="";
             int code = 200;
             try {
-                Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("172.16.0.3", 3128));
                 URL siteURL = new URL(url);
                 code = getCode(new URL(url));
                 if (code == 200) {
@@ -157,9 +156,9 @@ public class StatusService extends ScheduledService<BlockingQueue>{
         private int getCode(URL site){
             HttpURLConnection connection = null;
             int code=0;
+            Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("172.16.0.3", 3128));
             try{
-                 connection = (HttpURLConnection) site
-                        .openConnection();
+                connection = (HttpURLConnection) site.openConnection();
                 connection.setRequestMethod("HEAD");
 
                 connection.setReadTimeout(10000);
