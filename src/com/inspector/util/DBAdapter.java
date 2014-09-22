@@ -30,7 +30,7 @@ public class DBAdapter {
     public DBAdapter(List<String> pages) {
         try {
             Class.forName("org.h2.Driver");
-            DeleteDbFiles.execute(".", "test", true);            
+         //   DeleteDbFiles.execute(".", "test", true);            
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(DBAdapter.class.getName()).log(Level.SEVERE, null, ex);
         }

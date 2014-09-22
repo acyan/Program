@@ -19,8 +19,8 @@
          <children>
             <TableView fx:id="messageTable" prefHeight="200.0" prefWidth="200.0">
               <columns>
-                <TableColumn fx:id="dateColumn" prefWidth="84.0" text="Дата" />
-                <TableColumn fx:id="messageColumn" prefWidth="515.0" text="Уведомление" />
+                <TableColumn fx:id="dateColumn" prefWidth="144.0" text="Дата" />
+                <TableColumn fx:id="messageColumn" prefWidth="455.0" text="Уведомление" />
               </columns>
             </TableView>
          </children>

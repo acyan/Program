@@ -47,7 +47,7 @@ public class SiteEditDialogController {
      */
     @FXML
     public void initialize() {
-        
+        pageAddressColumn.setCellValueFactory(cellData->cellData.getValue().nameProperty());
     }    
     
     public void setDialogStage(Stage dialogStage) {
@@ -73,6 +73,7 @@ public class SiteEditDialogController {
     @FXML
     private void handleAdd(){
         site.pagesProperty().add(new Page(pageName.getText()));
+        
         pageName.setText("");
     }
     
@@ -94,7 +95,6 @@ public class SiteEditDialogController {
     }
     @FXML
     private void handleOk() {
-        String j=addressField.getText();
             site.setName(addressField.getText());
             site.setChange(yesRadioButton.isSelected());
             

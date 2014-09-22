@@ -32,7 +32,8 @@ public class ChangesService extends ScheduledService<BlockingQueue>{
         return sites;
     }
 
-    public void setSites(BlockingQueue<String> sites) {
+    public void setSites(List<String> sites) {
+        this.sites =null;
         this.sites = new LinkedBlockingQueue<>(sites);
     }
     

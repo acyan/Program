@@ -46,6 +46,7 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
 import javafx.concurrent.WorkerStateEvent;
@@ -150,7 +151,7 @@ public class MainApp extends Application{
         
         this.changesService = new ChangesService(getPages());
         changesService.setDelay(new Duration(3000));
-        changesService.setPeriod(new Duration(5000));
+        changesService.setPeriod(new Duration(60000));
         
         changesService.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             BlockingQueue<String> results = null;
@@ -158,24 +159,44 @@ public class MainApp extends Application{
             public void handle(WorkerStateEvent event) {
                 results = (BlockingQueue<String>) event.getSource().getValue();
                 siteData.forEach(site->{
-                    site.getPages().forEach(page->{
-                        if(page.getSum()==null){
-                            page.setSum(results.poll());
-                        } else if(!page.getSum().equals(results.peek())){
-                            adapter.insertDate(page.getName());
-                            adapter.getCount(page.getName());
-                            addMessage("Произошли изменения на странице "+page.getName());
-                            page.setSum(results.poll());
-                            page.setStatus("yes");
-                        } else{
-                            page.setStatus("no");
-                        }
-                    });
+                    if(site.getChange()){
+                        site.getPages().forEach(page->{
+                            if(page.getSum()==null){
+                                page.setSum(results.poll());
+                            } else if(!page.getSum().equals(results.peek())){
+                                adapter.insertDate(page.getName());
+                                adapter.getCount(page.getName());
+                                addMessage("Произошли изменения на странице "+page.getName());
+                                page.setSum(results.poll());
+                                page.setStatus("yes");
+                            } else{
+                                page.setStatus("no");
+                            }
+                        });
+                    }
                 });
             }
         });
         changesService.start();
-        
+        for(Site site: siteData){
+            site.changeProperty().addListener(new ChangeListener<Boolean>() {
+
+                @Override
+                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+
+                    changesService.setSites(getPages());
+                        
+                }
+            });
+            site.getPages().addListener(new ListChangeListener<Page>() {
+
+                @Override
+                public void onChanged(ListChangeListener.Change<? extends Page> c) {
+                    
+                    changesService.setSites(getPages());
+                }
+            });
+        }
 
 //        time = new SimpleStringProperty("0");
 //        Timeline timer = new Timeline(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
