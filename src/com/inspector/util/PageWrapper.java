@@ -19,11 +19,13 @@ public class PageWrapper {
     private String name;
     private String oldSum;
     private String newSum;
-
-    public PageWrapper(String name, String oldSum, String newSum) {
+    private String title;
+    
+    public PageWrapper(String name, String oldSum, String newSum, String title) {
         this.name = name;
         this.oldSum = oldSum;
         this.newSum = newSum;
+        this.title = title;
     }
     
     public Page getPage(){

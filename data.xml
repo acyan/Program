@@ -5,13 +5,24 @@
     <pages>
       <com.inspector.util.PageWrapper>
         <name>http://yandex.ru</name>
-        <oldSum>e8b1ffb11b0d65fb3f0dc4caf2ff3662</oldSum>
-        <newSum>a1094f03a81b481e6477a998fee8acee</newSum>
+        <oldSum>9e704c6738a6254c128a92dbd9f058a1</oldSum>
+        <newSum>c5c44809a3a2712de6d453855af81cc2</newSum>
       </com.inspector.util.PageWrapper>
       <com.inspector.util.PageWrapper>
         <name>http://market.yandex.ru</name>
-        <oldSum>0a810627e820562637d10ba8e5c679c3</oldSum>
-        <newSum>35b525c6335327b8b00911898869aa00</newSum>
+        <oldSum>4b81643cc6386057860c317a2771cf8a</oldSum>
+        <newSum>bfdbface5cdd4e3fa0fb12fbb924ad03</newSum>
+      </com.inspector.util.PageWrapper>
+    </pages>
+  </com.inspector.util.SiteWrapper>
+  <com.inspector.util.SiteWrapper>
+    <name>http://computer.mgou.ru/</name>
+    <change>false</change>
+    <pages>
+      <com.inspector.util.PageWrapper>
+        <name>http://computer.mgou.ru/</name>
+        <oldSum>0</oldSum>
+        <newSum>0</newSum>
       </com.inspector.util.PageWrapper>
     </pages>
   </com.inspector.util.SiteWrapper>

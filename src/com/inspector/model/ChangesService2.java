@@ -23,6 +23,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 /**
@@ -85,15 +86,20 @@ public class ChangesService2 extends ScheduledService<CopyOnWriteArrayList<Site>
                                 }
                                 in.close();
                                 connection.disconnect();
-                                doc = Jsoup.parse(String.valueOf(tmp)).select("body").first();
+                                Document document = Jsoup.parse(String.valueOf(tmp));
+                                String title = document.title();
+                                page.setTitle(title);
+                                
+                                doc = document.select("body").first();
                                 text = doc.text();
                                 md5 = md5Custom(text);
                                 page.setOldSum(page.getNewSum());                                
                                 page.setNewSum(md5);
-
+                                
                             }
-                            result.add(site);                              
+                                                        
                         }
+                        result.add(site);  
                     }                    
                 } catch(Exception e){
                     e.printStackTrace();

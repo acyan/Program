@@ -21,6 +21,7 @@ public class Page {
     private StringProperty status;
     private StringProperty oldSum;
     private StringProperty newSum;
+    private StringProperty title;
     
     public final void setName(String value) {
         nameProperty().set(value);
@@ -81,12 +82,27 @@ public class Page {
         }
         return oldSum;
     }
-    
+
+    public final void setTitle(String value) {
+        titleProperty().set(value);
+    }
+
+    public final String getTitle() {
+        return titleProperty().get();
+    }
+
+    public StringProperty titleProperty() {
+        if (title == null) {
+            title = new SimpleStringProperty();
+        }
+        return title;
+    }   
     public Page(String name) {
         setName(name);
         setStatus(null);
         setNewSum("0");
         setOldSum("0");
+        setTitle("");
     }
     
     
