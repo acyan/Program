@@ -147,7 +147,7 @@ public class MainApp extends Application{
         
         this.changesService = new ChangesService2(new ArrayList<>(siteData));
         changesService.setDelay(new Duration(3000));
-        changesService.setPeriod(Duration.minutes(10));
+        changesService.setPeriod(Duration.hours(1));
         
         changesService.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             CopyOnWriteArrayList<Site> results = null;
@@ -163,7 +163,8 @@ public class MainApp extends Application{
                 siteData.addAll(results);               
                 siteData.forEach(site->{
                         site.getPages().forEach(page->{
-                             if(!page.getOldSum().equals(page.getNewSum())){
+                            
+                             if((!page.getOldSum().equals(page.getNewSum())&&(!page.getOldSum().equals("0")))){
                                 adapter.insertDate(page.getName());
                           //      adapter.getCountAll(page.getName());
                                 addMessage("Произошли изменения на странице "+page.getName());
