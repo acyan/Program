@@ -24,12 +24,17 @@ import com.inspector.util.SiteWrapper;
 import com.inspector.util.Status;
 import com.thoughtworks.xstream.XStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.prefs.Preferences;
@@ -50,6 +55,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 
 /**
  *
@@ -138,18 +147,21 @@ public class MainApp extends Application{
         
         this.changesService = new ChangesService2(new ArrayList<>(siteData));
         changesService.setDelay(new Duration(3000));
-        changesService.setPeriod(new Duration(10000));
+        changesService.setPeriod(Duration.minutes(10));
         
         changesService.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             CopyOnWriteArrayList<Site> results = null;
             @Override
             public void handle(WorkerStateEvent event) {
                 results = (CopyOnWriteArrayList<Site>) event.getSource().getValue();
+                CopyOnWriteArrayList<Site> temp = new CopyOnWriteArrayList<Site>();
+                if(results.size()!=siteData.size()){
+                    
+                }
                 System.out.println(changesService.getState());
                 siteData.clear();
                 siteData.addAll(results);               
                 siteData.forEach(site->{
-                    if(site.getChange()){
                         site.getPages().forEach(page->{
                              if(!page.getOldSum().equals(page.getNewSum())){
                                 adapter.insertDate(page.getName());
@@ -160,7 +172,7 @@ public class MainApp extends Application{
                                 page.setStatus("no");
                             }
                         });
-                    }
+                    
                 });
             }
         });
@@ -474,12 +486,70 @@ public void showStatistics() {
         return messages;
     }
     
-//    public SimpleStringProperty timeProperty() {
-//        if (time == null) {
-//            time = new SimpleStringProperty();
-//        }
-//        return time;
-//    }    
+    public void createReport(){
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        HSSFSheet sheet = workbook.createSheet("Отчет");
+        sheet.setColumnWidth(0, 6000);
+        sheet.setColumnWidth(1, 2000);
+        sheet.setColumnWidth(2, 2000);
+        sheet.setColumnWidth(3, 2000);
+        sheet.setColumnWidth(4, 2000);
+        
+        Map<String, Object[]> data = new HashMap<String, Object[]>();
+        data.put("1", new Object[] {"Сайт", "За сегодня","За неделю","За все время"});
+        
+        int i =2;
+        
+        for(Site site:siteData){
+            if(site.getChange()){
+                for(Page page: site.getPages()){
+                    Integer countToday = adapter.getCountToday(page.getName());
+                    Integer countWeek = adapter.getCountWeek(page.getName());
+                    Integer countAll = adapter.getCountAll(page.getName());
+                    data.put(String.valueOf(i), new Object[]{page.getName(),countToday ,countWeek,countAll});
+                    i++;
+                }
+            }
+        }
+        
+//        data.put("2", new Object[] {"John", 1500000d});
+//        data.put("3", new Object[] {"Sam", 800000d});
+//        data.put("4", new Object[] {"Dean", 700000d});
+
+        Set<String> keyset = data.keySet();
+        int rownum = 0;
+        for (int key = 1;key<=keyset.size();key++) {
+            Row row = sheet.createRow(rownum++);
+            Object [] objArr = data.get(String.valueOf(key));
+            int cellnum = 0;
+            for (Object obj : objArr) {
+                Cell cell = row.createCell(cellnum++);
+                if(obj instanceof Date) 
+                    cell.setCellValue((Date)obj);
+                else if(obj instanceof Boolean)
+                    cell.setCellValue((Boolean)obj);
+                else if(obj instanceof String)
+                    cell.setCellValue((String)obj);
+                else if(obj instanceof Double)
+                    cell.setCellValue((Double)obj);
+                else if(obj instanceof Integer)
+                    cell.setCellValue(new Double(((Integer)obj).doubleValue()));
+            }
+        }
+
+        try {
+            FileOutputStream out = 
+                    new FileOutputStream(new File("new.xls"));
+            workbook.write(out);
+            out.close();
+            System.out.println("Excel written successfully..");
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     public static void main(String[] args) {
         launch(args);
     }

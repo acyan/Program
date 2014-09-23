@@ -9,13 +9,14 @@
   <menus>
     <Menu mnemonicParsing="false" text="Файл">
       <items>
-        <MenuItem mnemonicParsing="false" text="Close" />
+        <MenuItem mnemonicParsing="false" text="Закрыть" />
                   <MenuItem mnemonicParsing="false" onAction="#handleSettings" text="Настройки" />
       </items>
     </Menu>
     <Menu mnemonicParsing="false" text="Настройки">
                <items>
-                  <MenuItem mnemonicParsing="false" onAction="#handleStatistics" text="Unspecified Action" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleStatistics" text="Статистика" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleReport" text="Сохранить отчет" />
                </items></Menu>
     <Menu mnemonicParsing="false" text="Помощь">
       <items>

@@ -125,4 +125,9 @@ public class RootViewController {
     private void handleStatistics(){
         mainApp.showStatistics();
     }
+    
+    @FXML
+    private void handleReport(){
+        mainApp.createReport();
+    }
 }
