@@ -17,7 +17,7 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <BarChart fx:id="chartToday" animated="false" barGap="3.0" categoryGap="5.0" prefHeight="577.0" prefWidth="884.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <BarChart fx:id="chartToday" animated="false" barGap="3.0" categoryGap="2.0" prefHeight="577.0" prefWidth="884.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <xAxis>
                               <NumberAxis side="BOTTOM">
                                  <tickLabelFont>
@@ -28,7 +28,7 @@
                            <yAxis>
                               <CategoryAxis side="LEFT" fx:id="xAxis">
                                  <tickLabelFont>
-                                    <Font size="14.0" />
+                                    <Font size="10.0" />
                                  </tickLabelFont>
                               </CategoryAxis>                               
                            </yAxis>
