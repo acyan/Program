@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.chart.*?>
 <?import java.lang.*?>
@@ -16,21 +17,24 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <BarChart fx:id="chartToday" prefHeight="577.0" prefWidth="884.0">
+                        <BarChart fx:id="chartToday" animated="false" barGap="3.0" categoryGap="5.0" prefHeight="577.0" prefWidth="884.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <xAxis>
-                              <CategoryAxis side="BOTTOM" fx:id="xAxis">
-                                 <tickLabelFont>
-                                    <Font size="14.0" />
-                                 </tickLabelFont>
-                              </CategoryAxis>
-                           </xAxis>
-                           <yAxis>
-                              <NumberAxis side="LEFT">
+                              <NumberAxis side="BOTTOM">
                                  <tickLabelFont>
                                     <Font size="12.0" />
                                  </tickLabelFont>
                               </NumberAxis>
+                           </xAxis>
+                           <yAxis>
+                              <CategoryAxis side="LEFT" fx:id="xAxis">
+                                 <tickLabelFont>
+                                    <Font size="14.0" />
+                                 </tickLabelFont>
+                              </CategoryAxis>                               
                            </yAxis>
+                           <padding>
+                              <Insets left="250.0" />
+                           </padding>
                         </BarChart>
                      </children>
                   </AnchorPane>
@@ -42,19 +46,22 @@
                      <children>
                         <BarChart fx:id="chartWeek" prefHeight="577.0" prefWidth="884.0">
                            <xAxis>
-                              <CategoryAxis side="BOTTOM" fx:id="xAxis1">
-                                 <tickLabelFont>
-                                    <Font size="14.0" />
-                                 </tickLabelFont>
-                              </CategoryAxis>
-                           </xAxis>
-                           <yAxis>
-                              <NumberAxis side="LEFT">
+                              <NumberAxis side="BOTTOM">
                                  <tickLabelFont>
                                     <Font size="12.0" />
                                  </tickLabelFont>
                               </NumberAxis>
+                           </xAxis>
+                           <yAxis>
+                              <CategoryAxis side="LEFT" fx:id="xAxis1">
+                                 <tickLabelFont>
+                                    <Font size="14.0" />
+                                 </tickLabelFont>
+                              </CategoryAxis>                               
                            </yAxis>
+                           <padding>
+                              <Insets left="250.0" />
+                           </padding>
                         </BarChart>
                      </children>
                   </AnchorPane>
@@ -66,19 +73,22 @@
                      <children>
                         <BarChart fx:id="chartAll" prefHeight="577.0" prefWidth="884.0">
                            <xAxis>
-                              <CategoryAxis side="BOTTOM" fx:id="xAxis2">
-                                 <tickLabelFont>
-                                    <Font size="14.0" />
-                                 </tickLabelFont>
-                              </CategoryAxis>
-                           </xAxis>
-                           <yAxis>
-                              <NumberAxis side="LEFT">
+                              <NumberAxis side="BOTTOM">
                                  <tickLabelFont>
                                     <Font size="12.0" />
                                  </tickLabelFont>
                               </NumberAxis>
+                           </xAxis>
+                           <yAxis>
+                              <CategoryAxis side="LEFT" fx:id="xAxis2">
+                                 <tickLabelFont>
+                                    <Font size="14.0" />
+                                 </tickLabelFont>
+                              </CategoryAxis>                               
                            </yAxis>
+                           <padding>
+                              <Insets left="250.0" />
+                           </padding>
                         </BarChart>
                      </children>
                   </AnchorPane>
