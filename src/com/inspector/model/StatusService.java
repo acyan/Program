@@ -149,7 +149,7 @@ public class StatusService extends ScheduledService<BlockingQueue>{
                     result = Status.INACTIVE.getValue();
                 }
             } catch (Exception e) {
-                result = Status.INACTIVE.getValue();
+                
             }
             return result;
         }
@@ -159,6 +159,7 @@ public class StatusService extends ScheduledService<BlockingQueue>{
             Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("172.16.0.3", 3128));
             try{
                 connection = (HttpURLConnection) site.openConnection();
+                
                 connection.setRequestMethod("HEAD");
 
                 connection.setReadTimeout(10000);
@@ -166,8 +167,7 @@ public class StatusService extends ScheduledService<BlockingQueue>{
                 code = connection.getResponseCode();
                 
                 if(code==302){
-                    String url = connection.getHeaderField("Location");
-                    code = getCode(new URL(url));
+                    code = getCode(new URL(connection.getHeaderField("Location")));
                 }                
             } catch (Exception e){
                 

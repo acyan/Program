@@ -103,7 +103,7 @@ public class DBAdapter {
     public int getCountToday(String name){
         int result = 0;
         Calendar calendar = new GregorianCalendar();
-        calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         
