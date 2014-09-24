@@ -134,7 +134,7 @@ public class DBAdapter {
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(today);
         calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR)-7);
-        calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         System.out.println(calendar.getTime());

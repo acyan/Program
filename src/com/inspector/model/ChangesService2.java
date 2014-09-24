@@ -65,7 +65,7 @@ public class ChangesService2 extends ScheduledService<CopyOnWriteArrayList<Site>
                             for(Page page: site.getPages()){
                                 URL siteURL = new URL(page.getName());
                                 Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("172.16.0.3", 3128));
-                                HttpURLConnection connection = (HttpURLConnection) siteURL.openConnection();
+                                HttpURLConnection connection = (HttpURLConnection) siteURL.openConnection(proxy);
 
                                 connection.setRequestMethod("GET");
 
@@ -75,7 +75,7 @@ public class ChangesService2 extends ScheduledService<CopyOnWriteArrayList<Site>
                                 
                                 if(code == 302){
                                     siteURL = new URL(connection.getHeaderField("Location"));
-                                    connection = (HttpURLConnection) siteURL.openConnection();
+                                    connection = (HttpURLConnection) siteURL.openConnection(proxy);
                                 } else if (code == 200){
                                     String line = null;
                                     StringBuffer tmp = new StringBuffer();
