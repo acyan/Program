@@ -61,45 +61,52 @@ public class ChangesService2 extends ScheduledService<CopyOnWriteArrayList<Site>
             protected CopyOnWriteArrayList<Site> call(){
                 try{
                     for(Site site:sites){
-                        if(site.getChange()){
-                            for(Page page: site.getPages()){
-                                URL siteURL = new URL(page.getName());
-                                Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("172.16.0.3", 3128));
-                                HttpURLConnection connection = (HttpURLConnection) siteURL.openConnection(proxy);
+                        try{
+                            if(site.getChange()){
 
-                                connection.setRequestMethod("GET");
+                                for(Page page: site.getPages()){
 
-                                connection.setReadTimeout(10000);
-                                connection.connect();
-                                int code = connection.getResponseCode();
-                                
-                                if(code == 302){
-                                    siteURL = new URL(connection.getHeaderField("Location"));
-                                    connection = (HttpURLConnection) siteURL.openConnection(proxy);
-                                } else if (code == 200){
-                                    String line = null;
-                                    StringBuffer tmp = new StringBuffer();
-                                    BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                                    while ((line = in.readLine()) != null) {
-                                      tmp.append(line);
+                                    URL siteURL = new URL(page.getName());
+                                    Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("172.16.0.3", 3128));
+                                    HttpURLConnection connection = (HttpURLConnection) siteURL.openConnection();
+
+                                    connection.setRequestMethod("GET");
+
+                                    connection.setReadTimeout(10000);
+                                    connection.connect();
+                                    int code = connection.getResponseCode();
+
+                                    if(code == 302){
+                                        siteURL = new URL(connection.getHeaderField("Location"));
+                                        connection = (HttpURLConnection) siteURL.openConnection();
+                                    } else if (code == 200){
+                                        String line = null;
+                                        StringBuffer tmp = new StringBuffer();
+                                        BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                                        while ((line = in.readLine()) != null) {
+                                          tmp.append(line);
+                                        }
+                                        in.close();
+                                        String encoding = connection.getContentEncoding();                                
+                                        connection.disconnect();
+                                        Document document = Jsoup.parse(String.valueOf(tmp));
+                                        String title = document.title();
+
+                                        page.setTitle(title);
+
+                                        doc = document.select("body").first();
+                                        text = doc.text();
+                                        md5 = md5Custom(text);
+                                        page.setOldSum(page.getNewSum());                                
+                                        page.setNewSum(md5);                                    
                                     }
-                                    in.close();
-                                    String encoding = connection.getContentEncoding();                                
-                                    connection.disconnect();
-                                    Document document = Jsoup.parse(String.valueOf(tmp));
-                                    String title = document.title();
 
-                                    page.setTitle(title);
-
-                                    doc = document.select("body").first();
-                                    text = doc.text();
-                                    md5 = md5Custom(text);
-                                    page.setOldSum(page.getNewSum());                                
-                                    page.setNewSum(md5);                                    
                                 }
-  
+                                
+
                             }
-                                                        
+                        } catch(Exception e){
+                            result.add(site);
                         }
                         result.add(site);  
                     }                    

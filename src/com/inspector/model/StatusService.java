@@ -158,7 +158,7 @@ public class StatusService extends ScheduledService<BlockingQueue>{
             int code=0;
             Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("172.16.0.3", 3128));
             try{
-                connection = (HttpURLConnection) site.openConnection(proxy);
+                connection = (HttpURLConnection) site.openConnection();
                 
                 connection.setRequestMethod("HEAD");
 
@@ -170,7 +170,7 @@ public class StatusService extends ScheduledService<BlockingQueue>{
                     code = getCode(new URL(connection.getHeaderField("Location")));
                 }                
             } catch (Exception e){
-                
+                code  = 404;
             } finally{
                 connection.disconnect();
             }
