@@ -158,7 +158,7 @@ public class StatusService extends ScheduledService<BlockingQueue>{
             int code=0;
             Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("172.16.0.3", 3128));
             try{
-                connection = (HttpURLConnection) site.openConnection();
+                connection = (HttpURLConnection) site.openConnection(proxy);
                 
                 connection.setRequestMethod("HEAD");
 
